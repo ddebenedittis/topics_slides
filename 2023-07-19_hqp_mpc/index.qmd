@@ -1,0 +1,611 @@
+---
+title: "Hierarchical Quadratic Programming and Model Predictive Control"
+author: "Davide De Benedittis"
+institute: Università di Pisa
+format:
+    unipi-revealjs:
+        width: 1280
+        margin: 0.1
+        ### Format options
+        css: styles.css
+        ### Table of contents
+        toc: true
+        toc-depth: 1
+        ### Numbering
+        number-sections: false
+        number-depth: 1
+        ### Slides
+        slide-number: true
+        title-slide-attributes:
+            data-background-color: "#0f4a7c"
+            data-background-image: "https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/unipi_text_white.webp, https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/pisa.png, https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/unipi_white.svg, https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/dii_white.png, https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/cp_white.png"
+            data-background-opacity: "1"
+            data-background-position: "top 1% right 0.5%, bottom 0% right 0%, top 10% left 10%, top 10% left 25%, top 10% left 40%"
+            data-background-size: "auto 35px, auto 100%, auto 10%, auto 10%, auto 10%"
+        ### Navigation
+        controls: true
+        ### Print to PDF
+        pdf-separate-fragments: true
+        touch: true
+        embed-resources: false
+        ### Media
+        auto-play-media: true
+        ### Figures
+        fig-cap-location: top
+
+bibliography: refs.bib
+nocite: |
+    @*
+---
+
+# Introduction {visibility="uncounted"}
+
+::: {.hidden}
+$$
+\require{amsmath}
+\require{amssymb}
+\require{bm}
+\require{cancel}
+\require{empheq}
+
+\renewcommand*{\vec}[1]{#1}
+\newcommand*{\mat}[1]{#1}
+
+\newcommand*{\norm}[1]{\left\lVert #1 \right\rVert}
+
+\newcommand*{\subscr}[1]{_{\textrm{#1}}}
+\newcommand*{\supscr}[1]{^{\textrm{#1}}}
+
+% Partial derivative
+\newcommand*{\pd}[2]{\frac{\partial{#1}}{\partial{#2}}}
+
+% Transpose symbol with \T
+\makeatletter
+\newcommand*{\T}{%
+    {\mathpalette\@T{}}%
+}
+\newcommand*{\@T}[2]{%
+    % #1: math style
+    % #2: unused
+    \raisebox{\depth}{$\m@th#1\intercal$}%
+}
+\makeatother
+$$
+:::
+
+## General Problem
+
+**Problem**: satisfy a set of **tasks** that **cannot be satisfied concurrently**.
+
+:::: {.fragment .semi-fade-out fragment-index="1"}
+E.g., maintain an end-effector pose, avoid obstacles, and minimize energy consumption.
+:::
+
+::: {.fragment .fade-in fragment-index="1"}
+**Solution**: a **tradeoff** needs to be made among the tasks.
+:::
+
+::: {.fragment .fade-in}
+Two approaches can be adopted:
+:::
+
+::::: {.columns}
+
+:::: {.column width="50%"}
+::: {.fragment .fade-in-then-semi-out}
+**Weighted Approach**
+
+- A weight is assigned to each task
+- All tasks solved together
+- Tasks compromise each other
+:::
+::::
+
+:::: {.column width="50%"}
+::: {.fragment .fade-in}
+**Hierarchical Approach**
+
+- A priority is assigned to each task
+- Solved in a hierarchical way
+- Low-priority tasks do not compromise higher-priority ones
+:::
+::::
+
+:::::
+
+
+## Solution Approaches
+
+::::: {.columns}
+
+:::: {.column width="50%" #vcenter}
+
+Techniques to deal with redundancy:
+
+::: {.incremental}
+- Standard approach
+- Singularity-robust approach
+- Reverse priority approach
+- **Hierarchical Quadratic Programming (HQP)**
+:::
+::::
+
+::: {.column width="50%" #vcenter}
+![](img/KUKA_redundancy.png)
+:::
+
+:::::
+
+## Mathematical Framework
+
+A general Quadratic Programming (QP) optimization problem is
+$$
+\begin{aligned}
+\min_{x} \quad & \frac{1}{2}x^{T} Q x + p^T x \\
+\textrm{s.t.} \quad & A x - b = 0 \\
+& C x - d \leq 0.
+\end{aligned}
+$$
+
+::: {.fragment .fade-in}
+QP problems are:
+
+- computationally inexpensive,
+- able to describe a wide range of problems.
+:::
+
+# Hierarchical Quadratic Programming {visibility="uncounted"}
+
+## Tasks Definition
+
+Consider a set of tasks $T_p$ with $p = 1, \dots, n_p$ in the general form
+$$
+T_p = \left\lbrace \begin{matrix}
+A_p x - b_p = v_p \\
+C_p x - d_p \leq w_p
+\end{matrix} \right.
+$$
+
+where $v_p$ and $w_p$ are slack variables to be minimized.
+If the task is feasible, $v_p = 0$ and $w_p = 0$.
+
+If the task has no equality (inequality) constraints, $A_p$ ($C_p$) has zero rows and $n_x$ columns and $b_p$ ($d_p$) has zero elements.
+
+## QP Reformulation 1
+
+A single task $T$ is formulated as the following optimization problem
+$$
+\begin{aligned}
+\min_{x, v, w} \quad & \norm{v}^2 + \norm{w}^2 \\
+\textrm{s.t.} \quad & A x - b = v, \\
+& C x - d \leq w.
+\end{aligned}
+$$
+
+## QP Reformulation 1
+
+A single task $T$ is formulated as the following optimization problem
+$$
+\begin{aligned}
+\min_{x, w} \quad & \norm{Ax - b}^2 + \norm{w}^2 \\
+\textrm{s.t.} \quad & C x - d \leq w.
+\end{aligned}
+$$
+
+## QP Reformulation 2
+
+The previous optimization problem is then cast as a QP problem in the standard form as
+$$
+\begin{aligned}
+\min_{\xi = \begin{bmatrix} x^T & w^T \end{bmatrix}^T} \quad & \frac{1}{2}\xi^{T} Q \xi + p^T \xi \\
+\textrm{s.t.} \quad & \hat{C} \xi - \hat{d} \leq 0 \\
+& - w \leq 0.
+\end{aligned}
+$$
+
+where
+
+::: {style="font-size: 80%;"}
+$$
+\begin{alignedat}{3}
+	&\mat{Q} &&= \begin{bmatrix}
+		\mat{A} & \mat{0} \\
+		\mat{0} & \mat{I}
+	\end{bmatrix}^T \begin{bmatrix}
+	\mat{A} & \mat{0} \\
+	\mat{0} & \mat{I}
+\end{bmatrix}, \quad
+	&&\vec{p} = - \begin{bmatrix}
+		\mat{A} & \mat{0} \\
+		\mat{0} & \mat{I}
+	\end{bmatrix}^T \begin{bmatrix}
+	-\vec{b} \\
+	\vec{0}
+\end{bmatrix}, \\
+    &\hat{\mat{C}} &&= \begin{bmatrix}
+        \vec{C} & -\mat{I}
+    \end{bmatrix}, \qquad
+    &&\hat{\vec{d}} = \vec{d}.
+\end{alignedat}
+$$
+:::
+
+## Hierarchical Quadratic Programming (HQP) {auto-animate=true}
+
+The solution is computed recursively, starting from the highest priority task $T_1$.
+
+- The **global** solution is denoted as $\overline{x}^*_{p}$ and accounts for all higher priority tasks.
+- The **local** solution is denoted as $x^*_{p}$ and accounts only for the current task $T_p$ and higher priority inequality constraints.
+
+## Hierarchical Quadratic Programming (HQP) {auto-animate=true}
+
+The solution is computed recursively, starting from the highest priority task $T_1$.
+
+The solution up to task $T_{p+1}$ is computed as
+$$
+\overline{x}_{p+1}^* = \overline{x}_{p}^* + \overline{N}_p x_{p+1}^*
+$$
+
+The null space projector $\overline{N}_p$ is computed iteratively with
+$$
+\overline{N}_p = \operatorname{Null} \left(\overline{A}_p \right) = \overline{N}_{p-1} \operatorname{Null} \left(A_p \overline{N}_{p-1} \right),
+$$
+
+where $\overline{A}_p = \begin{bmatrix} A_1^T & \cdots & A_p^T \end{bmatrix}^T$. A possible null space projector is $\operatorname{Null} (A) = I - A^+ A$. The algorithm is initialized with $\overline{N}_0 = I$.
+
+## Hierarchical Quadratic Programming (HQP)
+
+$\xi_{p+1}^* = \begin{bmatrix} x_{p+1}^* \\ w_{p+1}^* \end{bmatrix}$ is the solution of a QP problem whose non-null matrices are
+
+::: {style="font-size: 70%;"}
+$$
+\begin{alignedat}{3}
+    &Q_{p+1} &&= \begin{bmatrix}
+        \overline{N}_p^T A_{p+1}^T A_{p+1} \overline{N}_p & 0 \\
+        0 & I_{n_{w_{p+1}}}
+    \end{bmatrix}, \quad
+    &&p_{p+1} = \begin{bmatrix}
+        \overline{N}_p^T A_{p+1}^T (A_{p+1}^T \hat{x}_p^* - b_{p+1}) \\
+        0
+    \end{bmatrix}, \\
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    &\hat{C}_{p+1} &&= \begin{bmatrix}
+        C_{p+1} \overline{N}_p & - I_{n_{w_{p+1}}} \\
+        \overline{C}_p \overline{N}_p & 0 \\
+        0 & - I_{n_{w_{p+1}}}
+    \end{bmatrix}, \quad
+    &&\hat{d}_{p+1} = \begin{bmatrix}
+        d_{p+1} - C_{p+1} \hat{x}_p^* \\
+        \overline{d}_{p} - \overline{C}_{p} \hat{x}_p^* + \overline{w}_p^* \\
+        0
+    \end{bmatrix}, \\
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    & \overline{C}_{p} &&= \begin{bmatrix}
+        C_p \\
+        \vdots \\
+        C_1
+    \end{bmatrix}, \quad
+    && \overline{d}_p = \begin{bmatrix}
+        d_p \\
+        \vdots \\
+        d_1
+    \end{bmatrix}, \quad
+    \overline{w}_p^* = \begin{bmatrix}
+        w_p^* \\
+        \vdots \\
+        w_1^*
+    \end{bmatrix}.
+\end{alignedat}
+$$
+:::
+
+::: footer
+See also [Perception-less terrain adaptation through whole body control and hierarchical optimization](https://ieeexplore.ieee.org/abstract/document/7803330)
+:::
+
+# Hierarchical Quadratic Programming Examples {visibility="uncounted"}
+
+## Quadrupeds Control
+The generalized coordinates and velocity vector are
+$$
+q = \begin{bmatrix} {}_I r_{IB} \\ q_{IB} \\ q_{j} \end{bmatrix} \in SE(3) \times \mathbb{R}^{n_{j}}, \qquad 
+v = \begin{bmatrix} {}_I v_{B} \\ {}_B \vec{\omega}_{IB} \\ \dot{q}_j \end{bmatrix} \in \mathbb{R}^{6 + n_j}.
+$$
+
+The robot equations of motion are are
+$$
+\begin{align}
+    \mat{M}_\textrm{u}(q) \dot{v} + \vec{h}_\textrm{u}(q, v) &=  \mat{J}_\textrm{u}^T (q) f, \\
+    \mat{M}_\textrm{a}(q) \dot{v} + \vec{h}_\textrm{a}(q, v) &= \vec{\tau} + \mat{J}_\textrm{a}^T (q) f.
+\end{align}
+$$
+
+
+## Quadrupeds Control
+The optimization vector can be chosen as $x = \begin{bmatrix} \dot{u}^T & f^T \end{bmatrix}^T$.
+
+The optimization vector is obtained as the solution of the Hierarchical QP problem, having tasks like:
+
+::: {.incremental}
+- Floating base dynamics: $M_u \dot{u} + h_u = J_u^T f$
+- Torque limits: $\tau_\min \leq \tau(\dot{u}, f) \leq \tau_\max$
+- Linearized friction cone limits (friction pyramid): $- \mu f_z \leq f_x \leq \mu f_z$ and $- \mu f_z \leq f_y \leq \mu f_z$
+- End effector reference tracking: $J_e \dot{u} - \dot{J}_e u = \ddot{r}_e\supscr{des} + K_d (\dot{r}_e\supscr{des} - J_e u) + K_e (r_e\supscr{des} - r_e\supscr{meas})$
+:::
+
+## Unicycles Fleet Management
+
+::: {style="font-size: 90%;"}
+Considering a fleet of $N$ unicycles, with state $q = \begin{bmatrix} x & y & \theta \end{bmatrix}^T$ and input $u = \begin{bmatrix} v & \omega \end{bmatrix}^T$, the optimization vector is $z = \begin{bmatrix} q_1 & u_1 & \dots & q_N & u_N \end{bmatrix}^T$.
+
+The optimization vector is obtained as the solution of the Hierarchical QP problem, having tasks like:
+
+::: {.incremental}
+- Linearized unicycle dynamic equations: $q(k+1) = A(k) q(k) + B(k) u(k)$
+- Centroid position reference: $\frac{1}{N} \sum_{i=1}^N \begin{bmatrix} x_i \\ y_i \end{bmatrix} = \begin{bmatrix} x_\textrm{c, des} \\ y_\textrm{c, des} \end{bmatrix}$
+- Fleet on circumference around the centroid: $(p_i - p_c) \cdot \frac{p_i(0) - p_c}{\norm{p_i(0) - p_c}} = r_\textrm{des}$, for $i = 1, \dots, N$, where $p = \begin{bmatrix} x \\ y \end{bmatrix}$
+:::
+:::
+
+<!--# ====================================================================== -->
+
+# Model Predictive Control (MPC) {visibility="uncounted"}
+
+## Overview {auto-animate=true}
+
+::: {data-id="img"}
+![](img/mpc.png){width=50% fig-align="center"}
+:::
+
+## Overview {auto-animate=true}
+
+Nonlinear Model Predictive Control (MPC) control problem:
+
+::: {style="font-size: 50%;"}
+$$
+\begin{aligned}
+&\min_{u(k), \dots, u(k+M-1)} \sum_{i = 0}^{P} q \left( y^\textrm{ref}_{k+i} - y_{k+i} \right) + \sum_{i=0}^{M-1} \delta(u_{k+i}) + \sum_{i=0}^{M-1} r(\Delta u_{k+i}) \\
+&\text{subject to}:  \\
+& x_{k+1} = f(x_k, u_k, w_k) \\
+& y_k = h(x_k, v_k) \\
+& u_{k+l} = u_{k + M - 1}, \quad i = M, \dots, P \\
+& \Delta u_k = u_k - u_{k-1} \\
+& x_{\min, k+i} \leq x_{k+i} \leq x_{\max, k+i}, \quad i = 0, \dots, P \\
+& u_{\min, k+i} \leq u_{k+i} \leq u_{\max, k+i}, \quad i = 0, \dots, M-1 \\
+\end{aligned}
+$$
+:::
+
+::: {data-id="img"}
+![](img/mpc.png){width=50% fig-align="center"}
+:::
+
+## Overview
+
+:::: {.columns}
+::: {.column width="70%" #vcenter}
+
+**Problems** of Nonlinear MPC:
+
+- high computational cost
+- local minima
+
+::: {.fragment fragment-index="1"}
+**Solution**: linearize!
+
+- linear prediction model
+- quadratic (i.e. convex) cost function
+- linear constraints
+:::
+:::
+
+::: {.column width="30%" #vcenter}
+::: {.fragment fragment-index="1"}
+![](img/pinky_and_the_brain.png){width="100%" fig-align="center"}
+:::
+:::
+::::
+
+## Shooting Methods
+
+:::: {.columns}
+
+::: {.column}
+***Single Shooting***
+
+- Only the inputs in the optimization vector
+- Sparsity is lost
+- Instability in the optimization problem
+:::
+
+::: {.column}
+***Multiple Shooting***
+
+- Optimization vector augmented with the states 
+- Sparsity is preserved
+- Better convergence
+:::
+
+::: {.column}
+![](img/single_shooting.png){width="60%" fig-align="center"}
+:::
+
+::: {.column}
+![](img/multiple_shooting.png){width="60%" fig-align="center"}
+:::
+
+::::
+
+## Linearized System {auto-animate=true}
+
+Given a nonlinear continuous time (CT) system
+$$
+\dot{x} = f(x, u),
+$$
+
+the linearized system around $(\overline{x}_k, \overline{u}_k)$ is
+
+::: {style="font-size: 80%;"}
+$$
+\dot{x} = f(\overline{x}_k, \overline{u}_k)
+    + \left. \frac{\partial{f(x, u)}}{\partial{x}} \right\rvert_{(\overline{x}_k, \overline{u}_k)} (x - \overline{x}_k)
+    + \left. \frac{\partial{f(x, u)}}{\partial{u}} \right\rvert_{(\overline{x}_k, \overline{u}_k)} (u - \overline{u}_k).
+$$
+:::
+
+With $\tilde{x}_k = x_k - \overline{x}_k$ and $\tilde{u}_k = u_k - \overline{u}_k$, the discrete time (DT) dynamics are
+
+::: {style="font-size: 80%;"}
+$$
+x_{k+1} = x_k + \left( f(\overline{x}_k, \overline{u}_k)
+    + \left. \frac{\partial{f(x, u)}}{\partial{x}} \right\rvert_{(\overline{x}_k, \overline{u}_k)} \tilde{x}_k
+    + \left. \frac{\partial{f(x, u)}}{\partial{u}} \right\rvert_{(\overline{x}_k, \overline{u}_k)} \tilde{u}_k \right) \Delta t.
+$$
+:::
+
+## Linearized System {auto-animate=true}
+
+With $\tilde{x}_k = x_k - \overline{x}_k$ and $\tilde{u}_k = u_k - \overline{u}_k$, the discrete time (DT) dynamics are
+
+::: {style="font-size: 80%;"}
+$$
+x_{k+1} = x_k + \left( f(\overline{x}_k, \overline{u}_k)
+    + \left. \frac{\partial{f(x, u)}}{\partial{x}} \right\rvert_{(\overline{x}_k, \overline{u}_k)} \tilde{x}_k
+    + \left. \frac{\partial{f(x, u)}}{\partial{u}} \right\rvert_{(\overline{x}_k, \overline{u}_k)} \tilde{u}_k \right) \Delta t.
+$$
+:::
+
+In general, the DT linearized dynamics can be rewritten as an affine system
+$$
+\tilde{x}_{k+1} = A_k \tilde{x}_{k} + B_k \tilde{u}_{k}.
+$$
+
+## Linearization Points
+
+There are several possible choice for the linearization points:
+
+- equilibrium point $\vec{x}_\mathrm{eq}, \vec{u}_\mathrm{eq}$ (☹️)
+- current position and previous optimal input $\vec{x}_\mathrm{meas}, \vec{u}_\mathrm{prev}$ (😐) (simple and low computational cost, but not good for "long" time horizons)
+- desired trajectory $\vec{x}_\mathrm{des} (t), \vec{u}_\mathrm{des} (t)$ (☹️)
+- previously optimized trajectory $\vec{x}^*_{k | k-1} (t), \vec{u}^*_{k-1} (t)$ (☺️) ($\vec{x}^*_{k | k-1} (t)$ is the trajectory obtained by evolving the measured state with the previous optimal inputs)
+
+## Linear MPC
+
+Linear time-invariant prediction model
+$$
+\left\lbrace
+\begin{align}
+x_{k+1} &= A x_k + B u_k \\
+y_k &= C x_k
+\end{align}
+\right.
+$$
+
+Cost function
+
+$$
+J(z, x_0) = x_N^T P x_N + \sum_{k=0}^{N-1} x_k^T Q x_K u_k^T R u_k,
+$$
+
+where $z = \begin{bmatrix} u_0 & u_1 & \dots & u_{N-1} \end{bmatrix}^T$.
+
+## Linear MPC
+
+![](img/math.png){fig-align="center"}
+
+## Linear MPC
+
+The resulting optimization problem is a constrained QP problem
+
+$$
+\require{cancel}
+\require{xcolor}
+\begin{align}
+\min_{z} \quad & \color{black}{\cancel{\frac{1}{2} x_0^T Y x_0}} + \frac{1}{2} z^T H z + x_0^T F^T z \\
+\text{s.t.} \quad & G z \leq W + S x_0.
+\end{align}
+$$
+
+## Linear Time-Varying MPC
+
+Given the Linear Time-Varying (LTV) model
+$$
+\left\lbrace
+\begin{align}
+x_{k+1} &= A_k x_k + B_k u_k \\
+y_k &= C_k x_k
+\end{align}
+\right.
+$$
+
+The optimization problem is
+$$
+\begin{align}
+\min_{z} \quad & \frac{1}{2} z^T H z + \begin{bmatrix} y_k^T & y_\textrm{ref, k}^T & u_k^T \end{bmatrix}^T F^T z \\
+\text{s.t.} \quad & G z \leq W + S \begin{bmatrix} y_k^T & y_\textrm{ref, k}^T & u_k^T \end{bmatrix}^T.
+\end{align}
+$$
+
+Where $z = \begin{bmatrix} u_k^T & \dots & u_{k+M}^T \end{bmatrix}$ the matrices $H, F, G, W, S$ are time variant and cannot be constructed offline.
+
+## Hierarchical Quadratic Programming with MPC
+
+We can easily augment HQP framework and construct a MPC with an extended optimization horizon.
+
+The base idea of the Hierarchical Quadratic Programming framework remains unchanged.
+
+When using the Multiple-Shooting method and linearing around the previous uptimal trajectory, the optimization vector is
+$$
+z = \begin{bmatrix}
+    z^T_k &
+    \dots &
+    z^T_{k+N}
+\end{bmatrix}^T,
+$$
+
+where
+$$
+z_i = \begin{bmatrix}
+    \tilde{x}_{i+1} \\
+    \tilde{u}_i
+\end{bmatrix} = \begin{bmatrix}
+    x_{i+1} - \overline{{x}}_{i+1} \\
+    u_i - \overline{u}_i
+\end{bmatrix}
+, \qquad i = k, \dots, k + N - 1.
+$$
+
+## Hierarchical Quadratic Programming with MPC
+
+Assuming a time-varying model, the task that imposes that the linearized dynamics equations are satisfied at all timesteps is
+
+::: {style="font-size: 80%;"}
+$$
+\begin{bmatrix}
+    I & - B_k \\
+    - A_{k+1} & 0 & I & - B_{k+1} \\
+    0 & 0 & - A_{k+2} & 0 & I & - B_{k+2} \\
+    & & & & & & \ddots
+\end{bmatrix} 
+\begin{bmatrix}
+    \tilde{x}_1 \\
+    \tilde{u}_0 \\
+    \tilde{x}_2 \\
+    \tilde{u}_1 \\
+    \vdots
+\end{bmatrix} = 
+\begin{bmatrix}
+    0 \\
+    0 \\
+    0 \\
+    \vdots
+\end{bmatrix}
+$$
+:::
+
+## References
+
+:::{#refs}
+:::
+
+# Grazie Per L'Attenzione (◕‿◕) {background-color="#0f4a7c" background-image="https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/unipi_text_white.webp, https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/unipi_text_white.webp, https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/p3.png" data-background-size="auto 35px, auto 35px, 100% 100%" data-background-position="99.5% 1%, 0.5% 1%, 50% 50%" visibility="uncounted"}

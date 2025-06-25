@@ -1,0 +1,9 @@
+title: unipi
+author: Davide De Benedittis
+version: 0.0.1
+contributes:
+  formats:
+    revealjs:
+      theme: [default, unipi.scss]
+      slide-number: true
+      date-format: long

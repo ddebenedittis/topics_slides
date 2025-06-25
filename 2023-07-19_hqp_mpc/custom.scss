@@ -1,0 +1,75 @@
+/*-- scss:defaults --*/
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+// 'EB Garamond', serif !default;
+// 'Cormorant Garamond', serif !default;
+// 'Roboto', sans-serif !default;
+// 'Lato', sans-serif !default;
+// 'Raleway', sans-serif;
+
+// Fonts
+$font-family-sans-serif: 'Georgia', sans-serif !default;
+$presentation-heading-font: 'Arial', sans-serif !default;
+
+// Colors
+$body-bg: #fff !default;
+$body-color: #222 !default;
+$link-color: #2a76dd !default;
+$backgroundColor: white;
+$selection-bg: lighten($link-color, 25%) !default;
+
+// Headings
+$presentation-heading-color: #104878 !default;
+
+// Fonts
+$presentation-font-size-root: 35px !default;
+
+/* ========================================================================== */
+
+/*-- scss:rules --*/
+
+#title-slide {
+    text-align: left;
+
+    // .title {
+    //     font-variant: small-caps;
+    // }
+
+    .quarto-title-authors {
+        justify-content: left;
+
+        .quarto-title-author {
+            padding-left: 0;
+            padding-right: 0;
+            width: 100%;
+        }
+    }
+}
+
+.reveal {
+    background-image: linear-gradient(rgba(255,255,255,.9), rgba(255,255,255,.9)), url("img/icons/unipi.svg");
+    background-position: bottom -40% right -20%;
+    background-size: auto 80%;
+    background-repeat: no-repeat;
+}
+
+/* ========================================================================== */
+
+section.has-dark-background a, section.has-dark-background a:hover {
+    color: white;
+}
+
+h3 {
+    text-align: center;
+}
+
+ul ul {
+    font-size: 25px;
+}
+
+
