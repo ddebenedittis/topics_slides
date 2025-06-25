@@ -4,7 +4,196 @@
     "href": "index.html",
     "title": "Slides",
     "section": "",
-    "text": "Differentiable Optimization\n\n\n\n\n\n\nDavide De Benedittis\n\n\nJun 23, 2025\n\n\n\n\n\nindex.qmd\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Hierarchical Quadratic Programming and Model Predictive Control\n\n\n\n\n\n\nDavide De Benedittis\n\n\n\n\n\nindex.qmd\n\n\n\n\n\n\n\n\n\n\n\nDifferentiable Optimization\n\n\n\n\n\n\nDavide De Benedittis\n\n\nJun 23, 2025\n\n\n\n\n\nindex.qmd\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#general-problem",
+    "href": "2023-07-19_hqp_mpc/index.html#general-problem",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "General Problem",
+    "text": "General Problem\nProblem: satisfy a set of tasks that cannot be satisfied concurrently.\n\nE.g., maintain an end-effector pose, avoid obstacles, and minimize energy consumption.\n\n\nSolution: a tradeoff needs to be made among the tasks.\n\n\nTwo approaches can be adopted:\n\n\n\n\nWeighted Approach\n\nA weight is assigned to each task\nAll tasks solved together\nTasks compromise each other\n\n\n\n\nHierarchical Approach\n\nA priority is assigned to each task\nSolved in a hierarchical way\nLow-priority tasks do not compromise higher-priority ones"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#solution-approaches",
+    "href": "2023-07-19_hqp_mpc/index.html#solution-approaches",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Solution Approaches",
+    "text": "Solution Approaches\n\n\nTechniques to deal with redundancy:\n\n\nStandard approach\nSingularity-robust approach\nReverse priority approach\nHierarchical Quadratic Programming (HQP)"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#mathematical-framework",
+    "href": "2023-07-19_hqp_mpc/index.html#mathematical-framework",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Mathematical Framework",
+    "text": "Mathematical Framework\nA general Quadratic Programming (QP) optimization problem is \\[\n\\begin{aligned}\n\\min_{x} \\quad & \\frac{1}{2}x^{T} Q x + p^T x \\\\\n\\textrm{s.t.} \\quad & A x - b = 0 \\\\\n& C x - d \\leq 0.\n\\end{aligned}\n\\]\n\nQP problems are:\n\ncomputationally inexpensive,\nable to describe a wide range of problems."
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#tasks-definition",
+    "href": "2023-07-19_hqp_mpc/index.html#tasks-definition",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Tasks Definition",
+    "text": "Tasks Definition\nConsider a set of tasks \\(T_p\\) with \\(p = 1, \\dots, n_p\\) in the general form \\[\nT_p = \\left\\lbrace \\begin{matrix}\nA_p x - b_p = v_p \\\\\nC_p x - d_p \\leq w_p\n\\end{matrix} \\right.\n\\]\nwhere \\(v_p\\) and \\(w_p\\) are slack variables to be minimized. If the task is feasible, \\(v_p = 0\\) and \\(w_p = 0\\).\nIf the task has no equality (inequality) constraints, \\(A_p\\) (\\(C_p\\)) has zero rows and \\(n_x\\) columns and \\(b_p\\) (\\(d_p\\)) has zero elements."
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#qp-reformulation-1",
+    "href": "2023-07-19_hqp_mpc/index.html#qp-reformulation-1",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "QP Reformulation 1",
+    "text": "QP Reformulation 1\nA single task \\(T\\) is formulated as the following optimization problem \\[\n\\begin{aligned}\n\\min_{x, v, w} \\quad & \\left\\lVert v \\right\\rVert^2 + \\left\\lVert w \\right\\rVert^2 \\\\\n\\textrm{s.t.} \\quad & A x - b = v, \\\\\n& C x - d \\leq w.\n\\end{aligned}\n\\]"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#qp-reformulation-1-1",
+    "href": "2023-07-19_hqp_mpc/index.html#qp-reformulation-1-1",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "QP Reformulation 1",
+    "text": "QP Reformulation 1\nA single task \\(T\\) is formulated as the following optimization problem \\[\n\\begin{aligned}\n\\min_{x, w} \\quad & \\left\\lVert Ax - b \\right\\rVert^2 + \\left\\lVert w \\right\\rVert^2 \\\\\n\\textrm{s.t.} \\quad & C x - d \\leq w.\n\\end{aligned}\n\\]"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#qp-reformulation-2",
+    "href": "2023-07-19_hqp_mpc/index.html#qp-reformulation-2",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "QP Reformulation 2",
+    "text": "QP Reformulation 2\nThe previous optimization problem is then cast as a QP problem in the standard form as \\[\n\\begin{aligned}\n\\min_{\\xi = \\begin{bmatrix} x^T & w^T \\end{bmatrix}^T} \\quad & \\frac{1}{2}\\xi^{T} Q \\xi + p^T \\xi \\\\\n\\textrm{s.t.} \\quad & \\hat{C} \\xi - \\hat{d} \\leq 0 \\\\\n& - w \\leq 0.\n\\end{aligned}\n\\]\nwhere\n\n\\[\n\\begin{alignedat}{3}\n    &Q &&= \\begin{bmatrix}\n        A & 0 \\\\\n        0 & I\n    \\end{bmatrix}^T \\begin{bmatrix}\n    A & 0 \\\\\n    0 & I\n\\end{bmatrix}, \\quad\n    &&p = - \\begin{bmatrix}\n        A & 0 \\\\\n        0 & I\n    \\end{bmatrix}^T \\begin{bmatrix}\n    -b \\\\\n    0\n\\end{bmatrix}, \\\\\n    &\\hat{C} &&= \\begin{bmatrix}\n        C & -I\n    \\end{bmatrix}, \\qquad\n    &&\\hat{d} = d.\n\\end{alignedat}\n\\]"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#hierarchical-quadratic-programming-hqp",
+    "href": "2023-07-19_hqp_mpc/index.html#hierarchical-quadratic-programming-hqp",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Hierarchical Quadratic Programming (HQP)",
+    "text": "Hierarchical Quadratic Programming (HQP)\nThe solution is computed recursively, starting from the highest priority task \\(T_1\\).\n\nThe global solution is denoted as \\(\\overline{x}^*_{p}\\) and accounts for all higher priority tasks.\nThe local solution is denoted as \\(x^*_{p}\\) and accounts only for the current task \\(T_p\\) and higher priority inequality constraints."
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#hierarchical-quadratic-programming-hqp-1",
+    "href": "2023-07-19_hqp_mpc/index.html#hierarchical-quadratic-programming-hqp-1",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Hierarchical Quadratic Programming (HQP)",
+    "text": "Hierarchical Quadratic Programming (HQP)\nThe solution is computed recursively, starting from the highest priority task \\(T_1\\).\nThe solution up to task \\(T_{p+1}\\) is computed as \\[\n\\overline{x}_{p+1}^* = \\overline{x}_{p}^* + \\overline{N}_p x_{p+1}^*\n\\]\nThe null space projector \\(\\overline{N}_p\\) is computed iteratively with \\[\n\\overline{N}_p = \\operatorname{Null} \\left(\\overline{A}_p \\right) = \\overline{N}_{p-1} \\operatorname{Null} \\left(A_p \\overline{N}_{p-1} \\right),\n\\]\nwhere \\(\\overline{A}_p = \\begin{bmatrix} A_1^T & \\cdots & A_p^T \\end{bmatrix}^T\\). A possible null space projector is \\(\\operatorname{Null} (A) = I - A^+ A\\). The algorithm is initialized with \\(\\overline{N}_0 = I\\)."
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#hierarchical-quadratic-programming-hqp-2",
+    "href": "2023-07-19_hqp_mpc/index.html#hierarchical-quadratic-programming-hqp-2",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Hierarchical Quadratic Programming (HQP)",
+    "text": "Hierarchical Quadratic Programming (HQP)\n\\(\\xi_{p+1}^* = \\begin{bmatrix} x_{p+1}^* \\\\ w_{p+1}^* \\end{bmatrix}\\) is the solution of a QP problem whose non-null matrices are\n\n\\[\n\\begin{alignedat}{3}\n    &Q_{p+1} &&= \\begin{bmatrix}\n        \\overline{N}_p^T A_{p+1}^T A_{p+1} \\overline{N}_p & 0 \\\\\n        0 & I_{n_{w_{p+1}}}\n    \\end{bmatrix}, \\quad\n    &&p_{p+1} = \\begin{bmatrix}\n        \\overline{N}_p^T A_{p+1}^T (A_{p+1}^T \\hat{x}_p^* - b_{p+1}) \\\\\n        0\n    \\end{bmatrix}, \\\\\n    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n    &\\hat{C}_{p+1} &&= \\begin{bmatrix}\n        C_{p+1} \\overline{N}_p & - I_{n_{w_{p+1}}} \\\\\n        \\overline{C}_p \\overline{N}_p & 0 \\\\\n        0 & - I_{n_{w_{p+1}}}\n    \\end{bmatrix}, \\quad\n    &&\\hat{d}_{p+1} = \\begin{bmatrix}\n        d_{p+1} - C_{p+1} \\hat{x}_p^* \\\\\n        \\overline{d}_{p} - \\overline{C}_{p} \\hat{x}_p^* + \\overline{w}_p^* \\\\\n        0\n    \\end{bmatrix}, \\\\\n    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n    & \\overline{C}_{p} &&= \\begin{bmatrix}\n        C_p \\\\\n        \\vdots \\\\\n        C_1\n    \\end{bmatrix}, \\quad\n    && \\overline{d}_p = \\begin{bmatrix}\n        d_p \\\\\n        \\vdots \\\\\n        d_1\n    \\end{bmatrix}, \\quad\n    \\overline{w}_p^* = \\begin{bmatrix}\n        w_p^* \\\\\n        \\vdots \\\\\n        w_1^*\n    \\end{bmatrix}.\n\\end{alignedat}\n\\]\n\n\nSee also Perception-less terrain adaptation through whole body control and hierarchical optimization"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#quadrupeds-control",
+    "href": "2023-07-19_hqp_mpc/index.html#quadrupeds-control",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Quadrupeds Control",
+    "text": "Quadrupeds Control\nThe generalized coordinates and velocity vector are \\[\nq = \\begin{bmatrix} {}_I r_{IB} \\\\ q_{IB} \\\\ q_{j} \\end{bmatrix} \\in SE(3) \\times \\mathbb{R}^{n_{j}}, \\qquad\nv = \\begin{bmatrix} {}_I v_{B} \\\\ {}_B \\omega_{IB} \\\\ \\dot{q}_j \\end{bmatrix} \\in \\mathbb{R}^{6 + n_j}.\n\\]\nThe robot equations of motion are are \\[\n\\begin{align}\n    M_\\textrm{u}(q) \\dot{v} + h_\\textrm{u}(q, v) &=  J_\\textrm{u}^T (q) f, \\\\\n    M_\\textrm{a}(q) \\dot{v} + h_\\textrm{a}(q, v) &= \\tau + J_\\textrm{a}^T (q) f.\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#quadrupeds-control-1",
+    "href": "2023-07-19_hqp_mpc/index.html#quadrupeds-control-1",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Quadrupeds Control",
+    "text": "Quadrupeds Control\nThe optimization vector can be chosen as \\(x = \\begin{bmatrix} \\dot{u}^T & f^T \\end{bmatrix}^T\\).\nThe optimization vector is obtained as the solution of the Hierarchical QP problem, having tasks like:\n\n\nFloating base dynamics: \\(M_u \\dot{u} + h_u = J_u^T f\\)\nTorque limits: \\(\\tau_\\min \\leq \\tau(\\dot{u}, f) \\leq \\tau_\\max\\)\nLinearized friction cone limits (friction pyramid): \\(- \\mu f_z \\leq f_x \\leq \\mu f_z\\) and \\(- \\mu f_z \\leq f_y \\leq \\mu f_z\\)\nEnd effector reference tracking: \\(J_e \\dot{u} - \\dot{J}_e u = \\ddot{r}_e^{\\textrm{des}} + K_d (\\dot{r}_e^{\\textrm{des}} - J_e u) + K_e (r_e^{\\textrm{des}} - r_e^{\\textrm{meas}})\\)"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#unicycles-fleet-management",
+    "href": "2023-07-19_hqp_mpc/index.html#unicycles-fleet-management",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Unicycles Fleet Management",
+    "text": "Unicycles Fleet Management\n\nConsidering a fleet of \\(N\\) unicycles, with state \\(q = \\begin{bmatrix} x & y & \\theta \\end{bmatrix}^T\\) and input \\(u = \\begin{bmatrix} v & \\omega \\end{bmatrix}^T\\), the optimization vector is \\(z = \\begin{bmatrix} q_1 & u_1 & \\dots & q_N & u_N \\end{bmatrix}^T\\).\nThe optimization vector is obtained as the solution of the Hierarchical QP problem, having tasks like:\n\n\nLinearized unicycle dynamic equations: \\(q(k+1) = A(k) q(k) + B(k) u(k)\\)\nCentroid position reference: \\(\\frac{1}{N} \\sum_{i=1}^N \\begin{bmatrix} x_i \\\\ y_i \\end{bmatrix} = \\begin{bmatrix} x_\\textrm{c, des} \\\\ y_\\textrm{c, des} \\end{bmatrix}\\)\nFleet on circumference around the centroid: \\((p_i - p_c) \\cdot \\frac{p_i(0) - p_c}{\\left\\lVert p_i(0) - p_c \\right\\rVert} = r_\\textrm{des}\\), for \\(i = 1, \\dots, N\\), where \\(p = \\begin{bmatrix} x \\\\ y \\end{bmatrix}\\)"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#overview",
+    "href": "2023-07-19_hqp_mpc/index.html#overview",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Overview",
+    "text": "Overview"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#overview-1",
+    "href": "2023-07-19_hqp_mpc/index.html#overview-1",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Overview",
+    "text": "Overview\nNonlinear Model Predictive Control (MPC) control problem:\n\n\\[\n\\begin{aligned}\n&\\min_{u(k), \\dots, u(k+M-1)} \\sum_{i = 0}^{P} q \\left( y^\\textrm{ref}_{k+i} - y_{k+i} \\right) + \\sum_{i=0}^{M-1} \\delta(u_{k+i}) + \\sum_{i=0}^{M-1} r(\\Delta u_{k+i}) \\\\\n&\\text{subject to}:  \\\\\n& x_{k+1} = f(x_k, u_k, w_k) \\\\\n& y_k = h(x_k, v_k) \\\\\n& u_{k+l} = u_{k + M - 1}, \\quad i = M, \\dots, P \\\\\n& \\Delta u_k = u_k - u_{k-1} \\\\\n& x_{\\min, k+i} \\leq x_{k+i} \\leq x_{\\max, k+i}, \\quad i = 0, \\dots, P \\\\\n& u_{\\min, k+i} \\leq u_{k+i} \\leq u_{\\max, k+i}, \\quad i = 0, \\dots, M-1 \\\\\n\\end{aligned}\n\\]"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#overview-2",
+    "href": "2023-07-19_hqp_mpc/index.html#overview-2",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Overview",
+    "text": "Overview\n\n\nProblems of Nonlinear MPC:\n\nhigh computational cost\nlocal minima\n\n\nSolution: linearize!\n\nlinear prediction model\nquadratic (i.e. convex) cost function\nlinear constraints"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#shooting-methods",
+    "href": "2023-07-19_hqp_mpc/index.html#shooting-methods",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Shooting Methods",
+    "text": "Shooting Methods\n\n\nSingle Shooting\n\nOnly the inputs in the optimization vector\nSparsity is lost\nInstability in the optimization problem\n\n\nMultiple Shooting\n\nOptimization vector augmented with the states\nSparsity is preserved\nBetter convergence"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#linearized-system",
+    "href": "2023-07-19_hqp_mpc/index.html#linearized-system",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Linearized System",
+    "text": "Linearized System\nGiven a nonlinear continuous time (CT) system \\[\n\\dot{x} = f(x, u),\n\\]\nthe linearized system around \\((\\overline{x}_k, \\overline{u}_k)\\) is\n\n\\[\n\\dot{x} = f(\\overline{x}_k, \\overline{u}_k)\n    + \\left. \\frac{\\partial{f(x, u)}}{\\partial{x}} \\right\\rvert_{(\\overline{x}_k, \\overline{u}_k)} (x - \\overline{x}_k)\n    + \\left. \\frac{\\partial{f(x, u)}}{\\partial{u}} \\right\\rvert_{(\\overline{x}_k, \\overline{u}_k)} (u - \\overline{u}_k).\n\\]\n\nWith \\(\\tilde{x}_k = x_k - \\overline{x}_k\\) and \\(\\tilde{u}_k = u_k - \\overline{u}_k\\), the discrete time (DT) dynamics are\n\n\\[\nx_{k+1} = x_k + \\left( f(\\overline{x}_k, \\overline{u}_k)\n    + \\left. \\frac{\\partial{f(x, u)}}{\\partial{x}} \\right\\rvert_{(\\overline{x}_k, \\overline{u}_k)} \\tilde{x}_k\n    + \\left. \\frac{\\partial{f(x, u)}}{\\partial{u}} \\right\\rvert_{(\\overline{x}_k, \\overline{u}_k)} \\tilde{u}_k \\right) \\Delta t.\n\\]"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#linearized-system-1",
+    "href": "2023-07-19_hqp_mpc/index.html#linearized-system-1",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Linearized System",
+    "text": "Linearized System\nWith \\(\\tilde{x}_k = x_k - \\overline{x}_k\\) and \\(\\tilde{u}_k = u_k - \\overline{u}_k\\), the discrete time (DT) dynamics are\n\n\\[\nx_{k+1} = x_k + \\left( f(\\overline{x}_k, \\overline{u}_k)\n    + \\left. \\frac{\\partial{f(x, u)}}{\\partial{x}} \\right\\rvert_{(\\overline{x}_k, \\overline{u}_k)} \\tilde{x}_k\n    + \\left. \\frac{\\partial{f(x, u)}}{\\partial{u}} \\right\\rvert_{(\\overline{x}_k, \\overline{u}_k)} \\tilde{u}_k \\right) \\Delta t.\n\\]\n\nIn general, the DT linearized dynamics can be rewritten as an affine system \\[\n\\tilde{x}_{k+1} = A_k \\tilde{x}_{k} + B_k \\tilde{u}_{k}.\n\\]"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#linearization-points",
+    "href": "2023-07-19_hqp_mpc/index.html#linearization-points",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Linearization Points",
+    "text": "Linearization Points\nThere are several possible choice for the linearization points:\n\nequilibrium point \\(x_\\mathrm{eq}, u_\\mathrm{eq}\\) (☹️)\ncurrent position and previous optimal input \\(x_\\mathrm{meas}, u_\\mathrm{prev}\\) (😐) (simple and low computational cost, but not good for “long” time horizons)\ndesired trajectory \\(x_\\mathrm{des} (t), u_\\mathrm{des} (t)\\) (☹️)\npreviously optimized trajectory \\(x^*_{k | k-1} (t), u^*_{k-1} (t)\\) (☺️) (\\(x^*_{k | k-1} (t)\\) is the trajectory obtained by evolving the measured state with the previous optimal inputs)"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#linear-mpc",
+    "href": "2023-07-19_hqp_mpc/index.html#linear-mpc",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Linear MPC",
+    "text": "Linear MPC\nLinear time-invariant prediction model \\[\n\\left\\lbrace\n\\begin{align}\nx_{k+1} &= A x_k + B u_k \\\\\ny_k &= C x_k\n\\end{align}\n\\right.\n\\]\nCost function\n\\[\nJ(z, x_0) = x_N^T P x_N + \\sum_{k=0}^{N-1} x_k^T Q x_K u_k^T R u_k,\n\\]\nwhere \\(z = \\begin{bmatrix} u_0 & u_1 & \\dots & u_{N-1} \\end{bmatrix}^T\\)."
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#linear-mpc-1",
+    "href": "2023-07-19_hqp_mpc/index.html#linear-mpc-1",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Linear MPC",
+    "text": "Linear MPC"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#linear-mpc-2",
+    "href": "2023-07-19_hqp_mpc/index.html#linear-mpc-2",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Linear MPC",
+    "text": "Linear MPC\nThe resulting optimization problem is a constrained QP problem\n\\[\n\\require{cancel}\n\\require{xcolor}\n\\begin{align}\n\\min_{z} \\quad & \\color{black}{\\cancel{\\frac{1}{2} x_0^T Y x_0}} + \\frac{1}{2} z^T H z + x_0^T F^T z \\\\\n\\text{s.t.} \\quad & G z \\leq W + S x_0.\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#linear-time-varying-mpc",
+    "href": "2023-07-19_hqp_mpc/index.html#linear-time-varying-mpc",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Linear Time-Varying MPC",
+    "text": "Linear Time-Varying MPC\nGiven the Linear Time-Varying (LTV) model \\[\n\\left\\lbrace\n\\begin{align}\nx_{k+1} &= A_k x_k + B_k u_k \\\\\ny_k &= C_k x_k\n\\end{align}\n\\right.\n\\]\nThe optimization problem is \\[\n\\begin{align}\n\\min_{z} \\quad & \\frac{1}{2} z^T H z + \\begin{bmatrix} y_k^T & y_\\textrm{ref, k}^T & u_k^T \\end{bmatrix}^T F^T z \\\\\n\\text{s.t.} \\quad & G z \\leq W + S \\begin{bmatrix} y_k^T & y_\\textrm{ref, k}^T & u_k^T \\end{bmatrix}^T.\n\\end{align}\n\\]\nWhere \\(z = \\begin{bmatrix} u_k^T & \\dots & u_{k+M}^T \\end{bmatrix}\\) the matrices \\(H, F, G, W, S\\) are time variant and cannot be constructed offline."
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#hierarchical-quadratic-programming-with-mpc",
+    "href": "2023-07-19_hqp_mpc/index.html#hierarchical-quadratic-programming-with-mpc",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Hierarchical Quadratic Programming with MPC",
+    "text": "Hierarchical Quadratic Programming with MPC\nWe can easily augment HQP framework and construct a MPC with an extended optimization horizon.\nThe base idea of the Hierarchical Quadratic Programming framework remains unchanged.\nWhen using the Multiple-Shooting method and linearing around the previous uptimal trajectory, the optimization vector is \\[\nz = \\begin{bmatrix}\n    z^T_k &\n    \\dots &\n    z^T_{k+N}\n\\end{bmatrix}^T,\n\\]\nwhere \\[\nz_i = \\begin{bmatrix}\n    \\tilde{x}_{i+1} \\\\\n    \\tilde{u}_i\n\\end{bmatrix} = \\begin{bmatrix}\n    x_{i+1} - \\overline{{x}}_{i+1} \\\\\n    u_i - \\overline{u}_i\n\\end{bmatrix}\n, \\qquad i = k, \\dots, k + N - 1.\n\\]"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#hierarchical-quadratic-programming-with-mpc-1",
+    "href": "2023-07-19_hqp_mpc/index.html#hierarchical-quadratic-programming-with-mpc-1",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "Hierarchical Quadratic Programming with MPC",
+    "text": "Hierarchical Quadratic Programming with MPC\nAssuming a time-varying model, the task that imposes that the linearized dynamics equations are satisfied at all timesteps is\n\n\\[\n\\begin{bmatrix}\n    I & - B_k \\\\\n    - A_{k+1} & 0 & I & - B_{k+1} \\\\\n    0 & 0 & - A_{k+2} & 0 & I & - B_{k+2} \\\\\n    & & & & & & \\ddots\n\\end{bmatrix}\n\\begin{bmatrix}\n    \\tilde{x}_1 \\\\\n    \\tilde{u}_0 \\\\\n    \\tilde{x}_2 \\\\\n    \\tilde{u}_1 \\\\\n    \\vdots\n\\end{bmatrix} =\n\\begin{bmatrix}\n    0 \\\\\n    0 \\\\\n    0 \\\\\n    \\vdots\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "2023-07-19_hqp_mpc/index.html#references",
+    "href": "2023-07-19_hqp_mpc/index.html#references",
+    "title": "Hierarchical Quadratic Programming and Model Predictive Control",
+    "section": "References",
+    "text": "References\n\n\nBellicoso, Dario, Christian Gehring, Jemin Hwangbo, Péter Fankhauser, and Marco Hutter. 2016. “Perception-Less Terrain Adaptation Through Whole Body Control and Hierarchical Optimization.” In, 558–64. https://doi.org/10.1109/HUMANOIDS.2016.7803330.\n\n\nDietrich, Alexander, Christian Ott, and Alin Albu-Schäffer. 2015. “An Overview of Null Space Projections for Redundant, Torque-Controlled Robots.” The International Journal of Robotics Research 34 (11): 1385–1400. https://doi.org/10.1177/0278364914566516.\n\n\nHerzog, Alexander, Nicholas Rotella, Sean Mason, Felix Grimminger, Stefan Schaal, and Ludovic Righetti. 2015. “Momentum Control with Hierarchical Inverse Dynamics on a Torque-Controlled Humanoid.” Autonomous Robots 40 (3): 473–91. https://doi.org/10.1007/s10514-015-9476-6.\n\n\nKanoun, Oussama, Florent Lamiraux, and Pierre-Brice Wieber. 2011. “Kinematic Control of Redundant Manipulators: Generalizing the Task-Priority Framework to Inequality Task.” IEEE Transactions on Robotics 27: 785–92.\n\n\nLasa, Martin de, Igor Mordatch, and Aaron Hertzmann. 2010. “Feature-Based Locomotion Controllers.” ACM Trans. Graph. 29 (4). https://doi.org/10.1145/1778765.1781157.\n\n\nZafar, Munzir, Seth Hutchinson, and Evangelos A. Theodorou. 2018. “Hierarchical Optimization for Whole-Body Control of Wheeled Inverted Pendulum Humanoids.” https://arxiv.org/abs/1810.03074."
   },
   {
     "objectID": "2025-06-23_differentiable_optimization/index.html#convex-optimization-problem",
