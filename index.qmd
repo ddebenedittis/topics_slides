@@ -1,0 +1,12 @@
+---
+title: "Slides"
+listing:
+  contents:
+    - "*/index.qmd"
+  type: grid
+  image-height: 100%
+  image-placeholder: featured-default.png
+  fields: [image, title, filename, date, author, description]
+  sort: "date desc"
+page-layout: full
+---

@@ -1,0 +1,193 @@
+---
+title: "Differentiable Optimization"
+author: "Davide De Benedittis"
+institute: TU Delft & University of Pisa
+date: 23 June 2025
+format:
+    tu_delft-revealjs:
+        width: 1280
+        margin: 0.1
+        ### Format options
+        css: styles.css
+        # reference-doc: slideunipi3.pptx
+        ### Table of contents
+        toc: false
+        toc-depth: 1
+        ### Numbering
+        number-sections: false
+        number-depth: 1
+        ### Slides
+        title-slide-attributes:
+            data-background-color: "#00a6d6"
+            data-background-image: "img/theme/tud_text_white.png, img/theme/unipi_text_white.webp, img/theme/ducks.png, img/theme/p1.png"
+            data-background-position: "top 1% left 99.5%, top 1% right 99.5%, top 0% right 0%, top 0% right 0%"
+            data-background-size: "auto 35px, auto 35px, auto 100%, 100% 100%"
+        ### Navigation
+        controls: true
+        ### Print to PDF
+        pdf-separate-fragments: true
+        touch: true
+        embed-resources: false
+        ### Media
+        auto-play-media: true
+        ### Figures
+        fig-cap-location: top
+# bibliography: references/refs.bib
+# nocite: |
+#     @*
+from: markdown+emoji
+---
+
+# Problem Description 📝 {visibility="uncounted"}
+
+## Convex Optimization Problem
+
+Consider a parametrized convex optimization problem
+$$
+\begin{aligned}
+& \min_x \quad && f(x, \theta) \\
+& \text{s.t.} && g(x, \theta) \leq 0 \\
+&&& h(x, \theta) = 0
+\end{aligned}
+$$
+
+Where $f$ and $g$ are convex functions, and $h$ is an affine function.
+
+## KKT Conditions
+
+Karush-Kuhn-Tucker (KKT) conditions generalize the method of Lagrange multipliers to constrained optimization problems.
+They provide necessary conditions for a solution to be optimal.
+
+The KKT conditions are:
+
+::: {style="font-size: 80%;"}
+$$
+\begin{aligned}
+g(x^*) &\leq 0, \qquad &\text{(Primal feasibility)} \\
+h(x^*) &= 0, &\text{(Primal feasibility)} \\
+\lambda^* &\geq 0, &\text{(Dual feasibility)} \\
+\lambda^* \circ g(x^*) &= 0, &\text{(Complementary slackness)} \\
+\nabla f(x^*) + (\lambda^*)^T \nabla g(x^*) + (\nu^*)^T \nabla h(x^*) &= 0 &\text{(Stationarity)}
+\end{aligned}
+$$
+:::
+
+::: {style="font-size: 80%;"}
+Where $\lambda^*$ and $\nu^*$ are the Lagrange multipliers for the inequality and equality constraints, respectively.
+The $\circ$ operator denotes the element-wise product (Hadamard product).
+:::
+
+## Differentiable Optimization (1/2)
+
+The gradient of the optimal solution with respect to the parameters $\theta$ can be computed with
+
+- **numerical methods** (:cry:)
+- **explicit methods** -- write the computational graph that calculates the solution and perform autodiff (:cry:)
+- **implicit methods** -- use KKT conditions and implicit function theorem (:smile:)
+
+In general, the optimal solution is not available in closed form.
+However, it is possible to derive the gradient of the optimal solution with respect to the parameters $\theta$ using the KKT conditions.
+
+## Differentiable Optimization (2/2) {.smaller}
+
+At the solution, we can treat the solver as simply finding the root of the nonlinear equation set
+
+::: {style="font-size: 80%;"}
+$$
+G(x^*, \lambda^*, \nu^*) = \begin{bmatrix}
+\nabla f(x^*) + (\lambda^*)^T \nabla g(x^*) + (\nu^*)^T \nabla h(x^*) \\
+\lambda \circ g(x^*) \\
+h(x^*) \\
+\end{bmatrix} = 0
+$$
+:::
+
+Using the shorthand $(x^*, \lambda^*, \nu^*)(\theta)$ as the primal-dual optimal solution as a function of $\theta$, we have
+
+::: {style="font-size: 80%;"}
+$$
+\begin{split}
+& \partial_{\theta} G(x^\star(\theta), \lambda^\star(\theta), \nu^\star(\theta), \theta) = 0 \\
+\Longrightarrow \;\; & \partial_{x, \lambda, \nu} G(x^\star, \lambda^\star, \nu^\star, \theta) \partial_\theta (x^\star, \lambda^\star, \nu^\star)(\theta) + \partial_{\theta} G(x^\star, \lambda^\star, \nu^\star, \theta) = 0 \\
+\Longrightarrow \;\; & \partial_\theta (x^\star, \lambda^\star, \nu^\star)(\theta) = -\left (\partial_{x, \lambda, \nu} G(x^\star, \lambda^\star, \nu^\star, \theta) \right)^{-1} \partial_{\theta} G(x^\star, \lambda^\star, \nu^\star, \theta).
+\end{split}
+$$
+:::
+
+From this, we can differentiate through the solution
+
+::: {style="font-size: 80%;"}
+$$
+\partial_{x, \lambda, \nu} G(x^*, \lambda^*, \nu^*, \theta) = \begin{bmatrix}
+\nabla^2_x f + (\lambda^*)^T \nabla^2 _x g & \partial_x g & \partial_x h \\
+\partial_x g^T \operatorname{diag}(\lambda^*) & \operatorname{diag}(g) & 0 \\
+\partial_x h^T & 0 & 0 \\
+\end{bmatrix}
+$$
+:::
+
+## Optimization as a Layer :onion:
+
+The forward pass computes the optimal solution, the backward pass computes the gradient of the optimal solution with respect to the parameters $\theta$.
+
+![From [BPQP](https://arxiv.org/pdf/2411.19285)](img/opt_layer.png){fig-align="center"}
+
+
+# Applications 🚀 {visibility="uncounted"}
+
+## Applications {auto-animate=true}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::: {.incremental}
+- Learn hard constraints
+- Modeling predictions
+- Game theory (e.g., Nash equilibrium)
+- Meta learning
+:::
+:::
+
+::: {.column width="50%"}
+![](img/polytope-learning.gif)
+:::
+::::
+
+## Applications {auto-animate=true}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- Learn hard constraints
+- Modeling predictions
+- Game theory (e.g., Nash equilibrium)
+- Meta learning
+- RL and control
+  - Optimization layers in RL
+  - MPC tuning
+  - Multi-agent control
+  - Safety
+  - High dimensional control
+:::
+
+::: {.column width="50%"}
+![From Actor Critic MPC](img/ac_mpc.png)
+:::
+::::
+
+<!-- ## CvxPy Test
+
+Omnidirectional robot go-to-goal task with obstacle avoidance.
+
+```{=html}
+<iframe width="1280" height="600" src="img/cvxpy_test.html" title="CvxPy"></iframe>
+``` -->
+
+# References 📚 {visibility="uncounted"}
+
+- [https://implicit-layers-tutorial.org/differentiable_optimization/](https://implicit-layers-tutorial.org/differentiable_optimization/) -- by Zico Kolter
+- [https://bamos.github.io/presentations/](https://bamos.github.io/presentations/) -- by Brandon Amos
+- Lots and lots of papers
+- Early works by Akshay Agrawal & Brandon Amos
+
+# Bedankt voor uw aandacht (◕‿◕) {background-color="#00a6d6" background-image="img/theme/tud_text_white.png, img/theme/unipi_text_white.webp, img/theme/p3.png" data-background-size="auto 35px, auto 35px, 100% 100%" data-background-position="99.5% 1%, 0.5% 1%, 50% 50%" visibility="uncounted"}

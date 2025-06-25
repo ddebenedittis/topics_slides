@@ -1,0 +1,102 @@
+/*-- scss:defaults --*/
+
+// Load fonts from Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+// How to use the fonts
+// 'EB Garamond', serif !default;
+// 'Cormorant Garamond', serif !default;
+// 'Roboto', sans-serif !default;
+// 'Lato', sans-serif !default;
+// 'Raleway', sans-serif;
+
+// Fonts
+$font-family-sans-serif: 'Georgia', sans-serif !default;
+$presentation-heading-font: 'Arial', sans-serif !default;
+
+// Colors
+$body-bg: #fff !default;
+$body-color: #222 !default;
+$link-color: #2a76dd !default;
+$backgroundColor: white;
+$selection-bg: lighten($link-color, 25%) !default;
+
+// Headings
+$presentation-heading-color: #4aa3d2 !default;
+
+// Fonts
+$presentation-font-size-root: 35px !default;
+
+/* ========================================================================= */
+
+/*-- scss:rules --*/
+
+// Title Slide Customization
+
+#title-slide {
+    text-align: left;
+    color: white !important;
+
+    .title {
+        color: white !important;
+    }
+
+    .quarto-title-authors {
+        justify-content: left;
+
+        .quarto-title-author {
+            padding-left: 0;
+            padding-right: 0;
+            width: 100%;
+        }
+    }
+}
+//  No slide number on title slide
+.reveal .slide-number > a[href*='title-slide'] {
+  display: none;
+}
+
+
+// Header Slides
+
+.reveal .slide-background.slide.level1 {
+    background-color: #0076c2;
+    background-image: url("../../../../../_extensions/ddebenedittis/tu_delft/img/tud_text_white.png"), url("../../../../../_extensions/ddebenedittis/tu_delft/img/p2.png");
+    background-size: 90px auto, 100% 100%;
+    background-position: 99.5% 1%, 50% 50%;
+    background-repeat: no-repeat, no-repeat;
+}
+.reveal .slide.level1 > h1 {
+    color: #ffffff;
+}
+
+// Normal Slides
+
+.reveal .slide-background.slide.level2 {
+    background-color: #fff;
+    background-image: url("../../../../../_extensions/ddebenedittis/tu_delft/img/tud_text.png"), url("../../../../../_extensions/ddebenedittis/tu_delft/img/tud_classic_a0.05.svg");
+    background-size: 90px auto, auto 80%;
+    background-position: 99.5% 1%, bottom -40% right -20%;
+    background-repeat: no-repeat, no-repeat;
+}
+.reveal .slide.level2 > h2 {
+    color: $presentation-heading-color;
+}
+
+/* ========================================================================== */
+
+section.has-dark-background a, section.has-dark-background a:hover {
+    color: white;
+}
+
+h3 {
+    text-align: center;
+}
+
+ul ul {
+    font-size: 25px;
+}

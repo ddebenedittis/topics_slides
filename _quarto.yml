@@ -1,0 +1,20 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "slides-listing"
+  navbar:
+    right:
+      - icon: github
+        href: https://github.com/spcanelon/slides-listing
+        aria-label: GitHub repo
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+
+
