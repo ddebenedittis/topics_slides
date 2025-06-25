@@ -7,6 +7,7 @@ format:
         width: 1280
         margin: 0.1
         ### Format options
+        theme: [custom.scss]
         css: styles.css
         ### Table of contents
         toc: true
