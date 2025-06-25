@@ -19,7 +19,7 @@ format:
         ### Slides
         title-slide-attributes:
             data-background-color: "#00a6d6"
-            data-background-image: "img/theme/tud_text_white.png, img/theme/unipi_text_white.webp, img/theme/ducks.png, img/theme/p1.png"
+            data-background-image: "img/tud_text_white.png, img/unipi_text_white.webp, img/ducks.png, img/p1.png"
             data-background-position: "top 1% left 99.5%, top 1% right 99.5%, top 0% right 0%, top 0% right 0%"
             data-background-size: "auto 35px, auto 35px, auto 100%, 100% 100%"
         ### Navigation
@@ -190,4 +190,4 @@ Omnidirectional robot go-to-goal task with obstacle avoidance.
 - Lots and lots of papers
 - Early works by Akshay Agrawal & Brandon Amos
 
-# Bedankt voor uw aandacht (◕‿◕) {background-color="#00a6d6" background-image="img/theme/tud_text_white.png, img/theme/unipi_text_white.webp, img/theme/p3.png" data-background-size="auto 35px, auto 35px, 100% 100%" data-background-position="99.5% 1%, 0.5% 1%, 50% 50%" visibility="uncounted"}
+# Bedankt voor uw aandacht (◕‿◕) {background-color="#00a6d6" background-image="img/tud_text_white.png, img/unipi_text_white.webp, img/p3.png" data-background-size="auto 35px, auto 35px, 100% 100%" data-background-position="99.5% 1%, 0.5% 1%, 50% 50%" visibility="uncounted"}
