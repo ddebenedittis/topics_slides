@@ -2,6 +2,16 @@
 
 Collection of slides for my personal website.
 
+## Usage
+
+Commit changes to the `main` branch normally.
+
+To update the slides, run
+```bash
+quarto publish gh-pages
+```
+and follow the instructions.
+
 ## Known Bugs
 
 The theme does not work in GitHub Pages
