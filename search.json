@@ -4,7 +4,56 @@
     "href": "index.html",
     "title": "Slides",
     "section": "",
-    "text": "Hierarchical Quadratic Programming and Model Predictive Control\n\n\n\n\n\n\nDavide De Benedittis\n\n\n\n\n\nindex.qmd\n\n\n\n\n\n\n\n\n\n\n\nDifferentiable Optimization\n\n\n\n\n\n\nDavide De Benedittis\n\n\nJun 23, 2025\n\n\n\n\n\nindex.qmd\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Hierarchical Quadratic Programming and Model Predictive Control\n\n\n\n\n\n\nDavide De Benedittis\n\n\n\n\n\nindex.qmd\n\n\n\n\n\n\n\n\n\n\n\nHierarchical Quadratic Programming for Robot Control\n\n\n\n\n\n\nDavide De Benedittis\n\n\nJul 31, 2025\n\n\n\n\n\nindex.qmd\n\n\n\n\n\n\n\n\n\n\n\nDifferentiable Optimization\n\n\n\n\n\n\nDavide De Benedittis\n\n\nJun 23, 2025\n\n\n\n\n\nindex.qmd\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "2025-06-23_differentiable_optimization/index.html#convex-optimization-problem",
+    "href": "2025-06-23_differentiable_optimization/index.html#convex-optimization-problem",
+    "title": "Differentiable Optimization",
+    "section": "Convex Optimization Problem",
+    "text": "Convex Optimization Problem\nConsider a parametrized convex optimization problem \\[\n\\begin{aligned}\n& \\min_x \\quad && f(x, \\theta) \\\\\n& \\text{s.t.} && g(x, \\theta) \\leq 0 \\\\\n&&& h(x, \\theta) = 0\n\\end{aligned}\n\\]\nWhere \\(f\\) and \\(g\\) are convex functions, and \\(h\\) is an affine function."
+  },
+  {
+    "objectID": "2025-06-23_differentiable_optimization/index.html#kkt-conditions",
+    "href": "2025-06-23_differentiable_optimization/index.html#kkt-conditions",
+    "title": "Differentiable Optimization",
+    "section": "KKT Conditions",
+    "text": "KKT Conditions\nKarush-Kuhn-Tucker (KKT) conditions generalize the method of Lagrange multipliers to constrained optimization problems. They provide necessary conditions for a solution to be optimal.\nThe KKT conditions are:\n\n\\[\n\\begin{aligned}\ng(x^*) &\\leq 0, \\qquad &\\text{(Primal feasibility)} \\\\\nh(x^*) &= 0, &\\text{(Primal feasibility)} \\\\\n\\lambda^* &\\geq 0, &\\text{(Dual feasibility)} \\\\\n\\lambda^* \\circ g(x^*) &= 0, &\\text{(Complementary slackness)} \\\\\n\\nabla f(x^*) + (\\lambda^*)^T \\nabla g(x^*) + (\\nu^*)^T \\nabla h(x^*) &= 0 &\\text{(Stationarity)}\n\\end{aligned}\n\\]\n\n\nWhere \\(\\lambda^*\\) and \\(\\nu^*\\) are the Lagrange multipliers for the inequality and equality constraints, respectively. The \\(\\circ\\) operator denotes the element-wise product (Hadamard product)."
+  },
+  {
+    "objectID": "2025-06-23_differentiable_optimization/index.html#differentiable-optimization-12",
+    "href": "2025-06-23_differentiable_optimization/index.html#differentiable-optimization-12",
+    "title": "Differentiable Optimization",
+    "section": "Differentiable Optimization (1/2)",
+    "text": "Differentiable Optimization (1/2)\nThe gradient of the optimal solution with respect to the parameters \\(\\theta\\) can be computed with\n\nnumerical methods (😢)\nexplicit methods – write the computational graph that calculates the solution and perform autodiff (😢)\nimplicit methods – use KKT conditions and implicit function theorem (😄)\n\nIn general, the optimal solution is not available in closed form. However, it is possible to derive the gradient of the optimal solution with respect to the parameters \\(\\theta\\) using the KKT conditions."
+  },
+  {
+    "objectID": "2025-06-23_differentiable_optimization/index.html#differentiable-optimization-22",
+    "href": "2025-06-23_differentiable_optimization/index.html#differentiable-optimization-22",
+    "title": "Differentiable Optimization",
+    "section": "Differentiable Optimization (2/2)",
+    "text": "Differentiable Optimization (2/2)\nAt the solution, we can treat the solver as simply finding the root of the nonlinear equation set\n\n\\[\nG(x^*, \\lambda^*, \\nu^*) = \\begin{bmatrix}\n\\nabla f(x^*) + (\\lambda^*)^T \\nabla g(x^*) + (\\nu^*)^T \\nabla h(x^*) \\\\\n\\lambda \\circ g(x^*) \\\\\nh(x^*) \\\\\n\\end{bmatrix} = 0\n\\]\n\nUsing the shorthand \\((x^*, \\lambda^*, \\nu^*)(\\theta)\\) as the primal-dual optimal solution as a function of \\(\\theta\\), we have\n\n\\[\n\\begin{split}\n& \\partial_{\\theta} G(x^\\star(\\theta), \\lambda^\\star(\\theta), \\nu^\\star(\\theta), \\theta) = 0 \\\\\n\\Longrightarrow \\;\\; & \\partial_{x, \\lambda, \\nu} G(x^\\star, \\lambda^\\star, \\nu^\\star, \\theta) \\partial_\\theta (x^\\star, \\lambda^\\star, \\nu^\\star)(\\theta) + \\partial_{\\theta} G(x^\\star, \\lambda^\\star, \\nu^\\star, \\theta) = 0 \\\\\n\\Longrightarrow \\;\\; & \\partial_\\theta (x^\\star, \\lambda^\\star, \\nu^\\star)(\\theta) = -\\left (\\partial_{x, \\lambda, \\nu} G(x^\\star, \\lambda^\\star, \\nu^\\star, \\theta) \\right)^{-1} \\partial_{\\theta} G(x^\\star, \\lambda^\\star, \\nu^\\star, \\theta).\n\\end{split}\n\\]\n\nFrom this, we can differentiate through the solution\n\n\\[\n\\partial_{x, \\lambda, \\nu} G(x^*, \\lambda^*, \\nu^*, \\theta) = \\begin{bmatrix}\n\\nabla^2_x f + (\\lambda^*)^T \\nabla^2 _x g & \\partial_x g & \\partial_x h \\\\\n\\partial_x g^T \\operatorname{diag}(\\lambda^*) & \\operatorname{diag}(g) & 0 \\\\\n\\partial_x h^T & 0 & 0 \\\\\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "2025-06-23_differentiable_optimization/index.html#optimization-as-a-layer",
+    "href": "2025-06-23_differentiable_optimization/index.html#optimization-as-a-layer",
+    "title": "Differentiable Optimization",
+    "section": "Optimization as a Layer 🧅",
+    "text": "Optimization as a Layer 🧅\nThe forward pass computes the optimal solution, the backward pass computes the gradient of the optimal solution with respect to the parameters \\(\\theta\\).\n\nFrom BPQP"
+  },
+  {
+    "objectID": "2025-06-23_differentiable_optimization/index.html#applications-1",
+    "href": "2025-06-23_differentiable_optimization/index.html#applications-1",
+    "title": "Differentiable Optimization",
+    "section": "Applications",
+    "text": "Applications\n\n\n\n\nLearn hard constraints\nModeling predictions\nGame theory (e.g., Nash equilibrium)\nMeta learning"
+  },
+  {
+    "objectID": "2025-06-23_differentiable_optimization/index.html#applications-2",
+    "href": "2025-06-23_differentiable_optimization/index.html#applications-2",
+    "title": "Differentiable Optimization",
+    "section": "Applications",
+    "text": "Applications\n\n\n\nLearn hard constraints\nModeling predictions\nGame theory (e.g., Nash equilibrium)\nMeta learning\nRL and control\n\nOptimization layers in RL\nMPC tuning\nMulti-agent control\nSafety\nHigh dimensional control\n\n\n\n\n\nFrom Actor Critic MPC"
   },
   {
     "objectID": "2023-07-19_hqp_mpc/index.html#general-problem",
@@ -196,52 +245,255 @@
     "text": "References\n\n\nBellicoso, Dario, Christian Gehring, Jemin Hwangbo, Péter Fankhauser, and Marco Hutter. 2016. “Perception-Less Terrain Adaptation Through Whole Body Control and Hierarchical Optimization.” In, 558–64. https://doi.org/10.1109/HUMANOIDS.2016.7803330.\n\n\nDietrich, Alexander, Christian Ott, and Alin Albu-Schäffer. 2015. “An Overview of Null Space Projections for Redundant, Torque-Controlled Robots.” The International Journal of Robotics Research 34 (11): 1385–1400. https://doi.org/10.1177/0278364914566516.\n\n\nHerzog, Alexander, Nicholas Rotella, Sean Mason, Felix Grimminger, Stefan Schaal, and Ludovic Righetti. 2015. “Momentum Control with Hierarchical Inverse Dynamics on a Torque-Controlled Humanoid.” Autonomous Robots 40 (3): 473–91. https://doi.org/10.1007/s10514-015-9476-6.\n\n\nKanoun, Oussama, Florent Lamiraux, and Pierre-Brice Wieber. 2011. “Kinematic Control of Redundant Manipulators: Generalizing the Task-Priority Framework to Inequality Task.” IEEE Transactions on Robotics 27: 785–92.\n\n\nLasa, Martin de, Igor Mordatch, and Aaron Hertzmann. 2010. “Feature-Based Locomotion Controllers.” ACM Trans. Graph. 29 (4). https://doi.org/10.1145/1778765.1781157.\n\n\nZafar, Munzir, Seth Hutchinson, and Evangelos A. Theodorou. 2018. “Hierarchical Optimization for Whole-Body Control of Wheeled Inverted Pendulum Humanoids.” https://arxiv.org/abs/1810.03074."
   },
   {
-    "objectID": "2025-06-23_differentiable_optimization/index.html#convex-optimization-problem",
-    "href": "2025-06-23_differentiable_optimization/index.html#convex-optimization-problem",
-    "title": "Differentiable Optimization",
-    "section": "Convex Optimization Problem",
-    "text": "Convex Optimization Problem\nConsider a parametrized convex optimization problem \\[\n\\begin{aligned}\n& \\min_x \\quad && f(x, \\theta) \\\\\n& \\text{s.t.} && g(x, \\theta) \\leq 0 \\\\\n&&& h(x, \\theta) = 0\n\\end{aligned}\n\\]\nWhere \\(f\\) and \\(g\\) are convex functions, and \\(h\\) is an affine function."
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#model-based-control",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#model-based-control",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Model-Based Control",
+    "text": "Model-Based Control\n\nVideo\n\nVideo\n\n\nVideo\n\n\nVideo\n\n\nVideo\n\n\nVideo\n\n\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
   },
   {
-    "objectID": "2025-06-23_differentiable_optimization/index.html#kkt-conditions",
-    "href": "2025-06-23_differentiable_optimization/index.html#kkt-conditions",
-    "title": "Differentiable Optimization",
-    "section": "KKT Conditions",
-    "text": "KKT Conditions\nKarush-Kuhn-Tucker (KKT) conditions generalize the method of Lagrange multipliers to constrained optimization problems. They provide necessary conditions for a solution to be optimal.\nThe KKT conditions are:\n\n\\[\n\\begin{aligned}\ng(x^*) &\\leq 0, \\qquad &\\text{(Primal feasibility)} \\\\\nh(x^*) &= 0, &\\text{(Primal feasibility)} \\\\\n\\lambda^* &\\geq 0, &\\text{(Dual feasibility)} \\\\\n\\lambda^* \\circ g(x^*) &= 0, &\\text{(Complementary slackness)} \\\\\n\\nabla f(x^*) + (\\lambda^*)^T \\nabla g(x^*) + (\\nu^*)^T \\nabla h(x^*) &= 0 &\\text{(Stationarity)}\n\\end{aligned}\n\\]\n\n\nWhere \\(\\lambda^*\\) and \\(\\nu^*\\) are the Lagrange multipliers for the inequality and equality constraints, respectively. The \\(\\circ\\) operator denotes the element-wise product (Hadamard product)."
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#nonlinear-model-predictive-control",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#nonlinear-model-predictive-control",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Nonlinear Model Predictive Control",
+    "text": "Nonlinear Model Predictive Control\n\\[\n\\begin{align}\n& \\min_x \\; && f (x) \\\\\n& \\text{s.t.} \\; && x \\in X\n\\end{align}\n\\]\n\n\nVideo\n\n\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
   },
   {
-    "objectID": "2025-06-23_differentiable_optimization/index.html#differentiable-optimization-12",
-    "href": "2025-06-23_differentiable_optimization/index.html#differentiable-optimization-12",
-    "title": "Differentiable Optimization",
-    "section": "Differentiable Optimization (1/2)",
-    "text": "Differentiable Optimization (1/2)\nThe gradient of the optimal solution with respect to the parameters \\(\\theta\\) can be computed with\n\nnumerical methods (😢)\nexplicit methods – write the computational graph that calculates the solution and perform autodiff (😢)\nimplicit methods – use KKT conditions and implicit function theorem (😄)\n\nIn general, the optimal solution is not available in closed form. However, it is possible to derive the gradient of the optimal solution with respect to the parameters \\(\\theta\\) using the KKT conditions."
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#convex-model-predictive-control",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#convex-model-predictive-control",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Convex Model Predictive Control",
+    "text": "Convex Model Predictive Control\n\n\n\\[\n\\begin{align}\n& \\min_x \\; && f (x) \\\\\n& \\text{s.t.} \\; && x \\in X\n\\end{align}\n\\]\n\n\\(f\\) is convex\n\\(X\\) is a convex set.\n\n\n\nVideo\n\n\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
   },
   {
-    "objectID": "2025-06-23_differentiable_optimization/index.html#differentiable-optimization-22",
-    "href": "2025-06-23_differentiable_optimization/index.html#differentiable-optimization-22",
-    "title": "Differentiable Optimization",
-    "section": "Differentiable Optimization (2/2)",
-    "text": "Differentiable Optimization (2/2)\nAt the solution, we can treat the solver as simply finding the root of the nonlinear equation set\n\n\\[\nG(x^*, \\lambda^*, \\nu^*) = \\begin{bmatrix}\n\\nabla f(x^*) + (\\lambda^*)^T \\nabla g(x^*) + (\\nu^*)^T \\nabla h(x^*) \\\\\n\\lambda \\circ g(x^*) \\\\\nh(x^*) \\\\\n\\end{bmatrix} = 0\n\\]\n\nUsing the shorthand \\((x^*, \\lambda^*, \\nu^*)(\\theta)\\) as the primal-dual optimal solution as a function of \\(\\theta\\), we have\n\n\\[\n\\begin{split}\n& \\partial_{\\theta} G(x^\\star(\\theta), \\lambda^\\star(\\theta), \\nu^\\star(\\theta), \\theta) = 0 \\\\\n\\Longrightarrow \\;\\; & \\partial_{x, \\lambda, \\nu} G(x^\\star, \\lambda^\\star, \\nu^\\star, \\theta) \\partial_\\theta (x^\\star, \\lambda^\\star, \\nu^\\star)(\\theta) + \\partial_{\\theta} G(x^\\star, \\lambda^\\star, \\nu^\\star, \\theta) = 0 \\\\\n\\Longrightarrow \\;\\; & \\partial_\\theta (x^\\star, \\lambda^\\star, \\nu^\\star)(\\theta) = -\\left (\\partial_{x, \\lambda, \\nu} G(x^\\star, \\lambda^\\star, \\nu^\\star, \\theta) \\right)^{-1} \\partial_{\\theta} G(x^\\star, \\lambda^\\star, \\nu^\\star, \\theta).\n\\end{split}\n\\]\n\nFrom this, we can differentiate through the solution\n\n\\[\n\\partial_{x, \\lambda, \\nu} G(x^*, \\lambda^*, \\nu^*, \\theta) = \\begin{bmatrix}\n\\nabla^2_x f + (\\lambda^*)^T \\nabla^2 _x g & \\partial_x g & \\partial_x h \\\\\n\\partial_x g^T \\operatorname{diag}(\\lambda^*) & \\operatorname{diag}(g) & 0 \\\\\n\\partial_x h^T & 0 & 0 \\\\\n\\end{bmatrix}\n\\]"
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#quadratic-programming-qp",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#quadratic-programming-qp",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Quadratic Programming (QP)",
+    "text": "Quadratic Programming (QP)\n\n\nSubset of Convex Programming.\nBoth efficient to solve and descriptive.\n\\[\n\\begin{align}\n& \\min_x \\; && x^T Q x + p^T x \\\\\n& \\text{s.t.} \\; && A x = b \\\\\n& && C x \\leq d\n\\end{align}\n\\]\n\n\n\n\n\n\n\n\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
   },
   {
-    "objectID": "2025-06-23_differentiable_optimization/index.html#optimization-as-a-layer",
-    "href": "2025-06-23_differentiable_optimization/index.html#optimization-as-a-layer",
-    "title": "Differentiable Optimization",
-    "section": "Optimization as a Layer 🧅",
-    "text": "Optimization as a Layer 🧅\nThe forward pass computes the optimal solution, the backward pass computes the gradient of the optimal solution with respect to the parameters \\(\\theta\\).\n\nFrom BPQP"
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#problem",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#problem",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Problem 🤕",
+    "text": "Problem 🤕\nProblem: solve a set of tasks that cannot be satisfied concurrently.\nE.g., maintain an end-effector pose (task), avoid obstacles (safety), and minimize energy consumption (efficiency).\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
   },
   {
-    "objectID": "2025-06-23_differentiable_optimization/index.html#applications-1",
-    "href": "2025-06-23_differentiable_optimization/index.html#applications-1",
-    "title": "Differentiable Optimization",
-    "section": "Applications",
-    "text": "Applications\n\n\n\n\nLearn hard constraints\nModeling predictions\nGame theory (e.g., Nash equilibrium)\nMeta learning"
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#problem-formulation",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#problem-formulation",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Problem Formulation",
+    "text": "Problem Formulation\nProblem: solve a set of tasks that cannot be satisfied concurrently.\n\nSolution: a tradeoff needs to be made among the tasks.\n\n\nTwo approaches can be adopted:\n\n\n\n\nWeighted Approach\n\nA weight is assigned to each task\nAll tasks solved together\nTasks compromise each other\n\n\n\n\nHierarchical Approach\n\nA priority is assigned to each task\nSolved in a hierarchical way\nLow-priority tasks do not compromise higher-priority ones\n\n\n\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
   },
   {
-    "objectID": "2025-06-23_differentiable_optimization/index.html#applications-2",
-    "href": "2025-06-23_differentiable_optimization/index.html#applications-2",
-    "title": "Differentiable Optimization",
-    "section": "Applications",
-    "text": "Applications\n\n\n\nLearn hard constraints\nModeling predictions\nGame theory (e.g., Nash equilibrium)\nMeta learning\nRL and control\n\nOptimization layers in RL\nMPC tuning\nMulti-agent control\nSafety\nHigh dimensional control\n\n\n\n\n\nFrom Actor Critic MPC"
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#solution-approaches",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#solution-approaches",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Solution Approaches",
+    "text": "Solution Approaches\n\n\nTechniques to deal with redundancy:\n\n\nStandard approach\n\n\n\n\nSingularity-robust approach\n\n\n\n\nReverse priority approach\n\n\n\n\nHierarchical Quadratic Programming (HQP)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#tasks-definition",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#tasks-definition",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Tasks Definition",
+    "text": "Tasks Definition\nConsider a set of tasks \\(T_p\\) with \\(p = 1, \\dots, n_p\\) in the general form \\[\nT_p = \\left\\lbrace \\begin{matrix}\nA_p x - b_p = v_p \\\\\nC_p x - d_p \\leq w_p\n\\end{matrix} \\right.\n\\]\nwhere \\(v_p\\) and \\(w_p\\) are slack variables to be minimized.\n(If the task is feasible, it will be \\(v_p = 0\\) and \\(w_p = 0\\).)\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#tasks-reformulation",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#tasks-reformulation",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Tasks Reformulation",
+    "text": "Tasks Reformulation\nA single task \\(T\\) is formulated as the following optimization problem \\[\n\\begin{aligned}\n\\min_{x, w} \\quad & \\|{Ax - b}\\|_2^2 + \\| w \\|_2^2 \\\\\n\\textrm{s.t.} \\quad & C x - d \\leq w.\n\\end{aligned}\n\\]\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#hierarchical-quadratic-programming-hqp",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#hierarchical-quadratic-programming-hqp",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Hierarchical Quadratic Programming (HQP)",
+    "text": "Hierarchical Quadratic Programming (HQP)\nThe solution is computed recursively, starting from the highest priority task \\(T_1\\).\n\nThe global solution is denoted as \\(\\overline{x}^*_{p}\\) and accounts for all higher priority tasks.\nThe local solution is denoted as \\(x^*_{p}\\) and accounts only for the current task \\(T_p\\) and higher priority inequality constraints.\n\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#hierarchical-quadratic-programming-hqp-1",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#hierarchical-quadratic-programming-hqp-1",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Hierarchical Quadratic Programming (HQP)",
+    "text": "Hierarchical Quadratic Programming (HQP)\nThe solution is computed recursively, starting from the highest priority task \\(T_1\\).\nThe solution up to task \\(T_{p+1}\\) is computed as \\[\n\\overline{x}_{p+1}^* = \\overline{x}_{p}^* + \\overline{N}_p x_{p+1}^*\n\\]\nThe null space projector \\(\\overline{N}_p\\) is computed iteratively with \\[\n\\overline{N}_p = \\operatorname{Null} \\left(\\overline{A}_p \\right) = \\overline{N}_{p-1} \\operatorname{Null} \\left(A_p \\overline{N}_{p-1} \\right),\n\\]\nwhere \\(\\overline{A}_p = \\begin{bmatrix} A_1^T & \\cdots & A_p^T \\end{bmatrix}^T\\).\nA null space projector can be computed using the SVD decomposition.\nThe algorithm is initialized with \\(\\overline{N}_0 = I\\).\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#hierarchical-quadratic-programming-hqp-2",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#hierarchical-quadratic-programming-hqp-2",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Hierarchical Quadratic Programming (HQP)",
+    "text": "Hierarchical Quadratic Programming (HQP)\n\\(\\xi_{p+1}^* = \\begin{bmatrix} x_{p+1}^* \\\\ w_{p+1}^* \\end{bmatrix}\\) is the solution of a QP problem whose non-null matrices are\n\n\\[\n\\begin{alignedat}{3}\n    &Q_{p+1} &&= \\begin{bmatrix}\n        \\overline{N}_p^T A_{p+1}^T A_{p+1} \\overline{N}_p & 0 \\\\\n        0 & I_{n_{w_{p+1}}}\n    \\end{bmatrix}, \\quad\n    &&p_{p+1} = \\begin{bmatrix}\n        \\overline{N}_p^T A_{p+1}^T (A_{p+1}^T \\hat{x}_p^* - b_{p+1}) \\\\\n        0\n    \\end{bmatrix}, \\\\\n    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n    &\\hat{C}_{p+1} &&= \\begin{bmatrix}\n        C_{p+1} \\overline{N}_p & - I_{n_{w_{p+1}}} \\\\\n        \\overline{C}_p \\overline{N}_p & 0 \\\\\n        0 & - I_{n_{w_{p+1}}}\n    \\end{bmatrix}, \\quad\n    &&\\hat{d}_{p+1} = \\begin{bmatrix}\n        d_{p+1} - C_{p+1} \\hat{x}_p^* \\\\\n        \\overline{d}_{p} - \\overline{C}_{p} \\hat{x}_p^* + \\overline{w}_p^* \\\\\n        0\n    \\end{bmatrix}, \\\\\n    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n    & \\overline{C}_{p} &&= \\begin{bmatrix}\n        C_p \\\\\n        \\vdots \\\\\n        C_1\n    \\end{bmatrix}, \\quad\n    && \\overline{d}_p = \\begin{bmatrix}\n        d_p \\\\\n        \\vdots \\\\\n        d_1\n    \\end{bmatrix}, \\quad\n    \\overline{w}_p^* = \\begin{bmatrix}\n        w_p^* \\\\\n        \\vdots \\\\\n        w_1^*\n    \\end{bmatrix}.\n\\end{alignedat}\n\\]\n\nDavide De Benedittis - Hierarchical Quadratic Programming"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#classic-control-scheme",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#classic-control-scheme",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Classic Control Scheme",
+    "text": "Classic Control Scheme\n\n\n\nDavide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [1]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#two-blocks-control-scheme",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#two-blocks-control-scheme",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Two-Blocks Control Scheme",
+    "text": "Two-Blocks Control Scheme\n\n\n\nDavide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [1]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#introduction",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#introduction",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Introduction",
+    "text": "Introduction\nResearch Goal: consider the contact compliance in the control design.\nContributions:\n\nThe Soft Bilinear Inverted Pendulum (SBIP) model is proposed and used in the Motion Planner design.​\nA Whole Body Controller is developed using Hierarchical Optimization and a soft contact model.​\nThe improvements granted by considering the softness in the MP and the WBC are evaluated.​\nThe proposed approach is tested in simulations and experiments.\n\n\n\nDavide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [1]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#soft-bilinear-inverted-pendulum-model",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#soft-bilinear-inverted-pendulum-model",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Soft Bilinear Inverted Pendulum Model",
+    "text": "Soft Bilinear Inverted Pendulum Model\n\n\nEquations of motion of the SBIP model: \\[\n\\begin{align}\n    \\ddot{x}_{CoM} &= \\frac{g + \\ddot{z}_{CoM}}{h_{CoM}} (x_{CoM} - x_{ZMP}) \\\\\n    \\ddot{y}_{CoM} &= \\frac{g + \\ddot{z}_{CoM}}{h_{CoM}} (y_{CoM} - y_{ZMP}) \\\\\n    \\ddot{z}_{CoM} &= - \\ddot{\\delta} = - g + 1/m (k_p \\delta + k_d \\dot{\\delta})\n\\end{align}\n\\]\nSimplified model used to plan the base and feet trajectories over a long horizon.\nThe planner is a QP-based MPC that tracks a base velocity reference.\n\n\n\n\n\n\n\n\n\n\n\n\nDavide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [1]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#tracking-controller",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#tracking-controller",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Tracking Controller",
+    "text": "Tracking Controller\n\n\nFull robot model used to plan over a short horizon with higher fidelity.\nThe equations of motion of a legged robot are \\[\nM(q) \\ddot{q} + h(q, \\dot{q}) = S^T \\tau + J^T (q) f\n\\] which can be split into the underactuated and actuated part as \\[\n\\begin{align}\nM_a (q) \\ddot{v} + h_a (q, v) &= \\tau + J_a^T (q) f \\\\\nM_u (q) \\ddot{q} + h_u (q, v) &= J_u^T (q) f\n\\end{align}\n\\]\nThe optimization vector is \\[\nx_{opt} = \\begin{bmatrix}\n    \\dot{v}^T & f^T & \\delta_d^T\n\\end{bmatrix}^T\n\\]\nFrom the optimization vector and the robot model, the joint torques are \\[\n\\tau^* = M_a (q) \\dot{v}^* + h_a (q, v) - J_a^T (q) f^*\n\\]\n\n\n\n\n\nPriority\n\n\nTasks\n\n\n\n\n\n\n1\n\n\nPhysical consistency\n\n\n\n\n2\n\n\nActuation torque limits\n\n\n\n\nContact friction cone limits\n\n\n\n\nForce modulation\n\n\n\n\n3\n\n\nSoft contact constraints\n\n\n\n\n4\n\n\nBase linear trajectory tracking\n\n\n\n\nBase angular trajectory tracking\n\n\n\n\nSwing feet trajectory tracking\n\n\n\n\n5\n\n\nEnergy minimization\n\n\n\n\nContact forces minimization\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDavide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [1]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#validation-in-simulation",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#validation-in-simulation",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Validation in Simulation",
+    "text": "Validation in Simulation\n\n\nANYmal C robot\n\n\nVideo\n\n\n\nSOLO12 robot\n\n\nVideo\n\n\n\n\nDavide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [1]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#comparison-in-simulation",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#comparison-in-simulation",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Comparison in Simulation",
+    "text": "Comparison in Simulation\n\n\nState of the art -&gt; failure\n\n\nVideo\n\n\n\nProposed approach -&gt; success\n\n\nVideo\n\n\n\n\nDavide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [1]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#comparison-in-simulation-1",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#comparison-in-simulation-1",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Comparison in Simulation",
+    "text": "Comparison in Simulation\nFour controller configurations compared using four KPIs and two different scenarios.\n\n\nDavide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [1]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#experimental-results",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#experimental-results",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Experimental Results",
+    "text": "Experimental Results\nTested with the SOLO12 robot on a foam rubber terrain.\n\n\nFlat ground\n\n\nVideo\n\n\n\nInclined ground\n\n\nVideo\n\n\n\n\nDavide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [1]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#sbip-conclusion",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#sbip-conclusion",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "SBIP Conclusion",
+    "text": "SBIP Conclusion\n\nConsidering the terrain characteristics in both components of a two-blocks control scheme is beneficial.\nSBIP model is a good compromise between fidelity and computational efficiency.\nHQP deals with tasks priorities effectively.\n\n\nDavide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [1]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#problem-1",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#problem-1",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Problem",
+    "text": "Problem\nActuators overheating during prolonged use.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDavide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#introduction-1",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#introduction-1",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Introduction",
+    "text": "Introduction\n\n\nResearch Goal: guarantee thermal safety and optimal performance using control.\nContributions:\n\nConsider the thermal dynamics in the control design.\nHQP based approach for constraints prioritization.\nAblation study to evaluate the impact on performance.\n\n\n\n\n\n\n\n\n\nDavide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#control-architecture",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#control-architecture",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Control Architecture",
+    "text": "Control Architecture\nFirst order thermal model \\[\n\\dot{T} = - \\alpha (T - T_\\text{amb}) + \\beta | \\tau |\n\\]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#control-architecture-1",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#control-architecture-1",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Control Architecture",
+    "text": "Control Architecture\n\n\n\n\n\n\n\n\nOptimization vector: \\[\nx = \\begin{bmatrix} q^T & \\dot{q}^T & T^T & \\tau_s^T \\end{bmatrix}^T\n\\]\n\nTasks:\n\nDynamic consistency, Thermal model, Epigraph reformulation\nThermal safety, Safety limits\nPrimary task (e.g., end-effector pose)\nSecondary tasks (e.g., control energy minimization)\n\n\n\nDavide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#results---reach-and-hold",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#results---reach-and-hold",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Results - Reach and Hold",
+    "text": "Results - Reach and Hold\n\n\nDavide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]\n\n\nDavide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#section",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#section",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "",
+    "text": "Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#results---circle",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#results---circle",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Results - Circle",
+    "text": "Results - Circle\n\nDavide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#section-1",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#section-1",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "",
+    "text": "Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#results---lemniscate",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#results---lemniscate",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Results - Lemniscate",
+    "text": "Results - Lemniscate\n\n\nDavide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#section-2",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#section-2",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "",
+    "text": "Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#conclusion",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#conclusion",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Conclusion",
+    "text": "Conclusion\n\n\n\nConsidering the temerature dynamics in the control can avoid overdimensioning the hardware or downsizing the task.\nHQP effectively guarantees thermal safety.\nOther approaches (e.g., CBFs) can further enhance performance in certain scenarios.\n\n\n\n\n\n\n\n\n\nDavide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [2]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#conclusion-2",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#conclusion-2",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Conclusion",
+    "text": "Conclusion\n\nHQP allows to solve a set of tasks while enforcing a priority order\nIt has been successfully applied to:\n\nLegged locomotion on compliant terrains [1]\nThermal safety in robots [2]\n\nOther potential application:\n\nMulti-robot control [3]\n\nFuture works:\n\nNon-uniform time sampling [4]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#future-works-multi-robot-control",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#future-works-multi-robot-control",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Future Works – Multi-Robot Control",
+    "text": "Future Works – Multi-Robot Control\n\nMulti-robot setting\nHQP to manage multiple concurrent and potentially conflicting tasks\n\n\n\nHeterogeneous coverage and battery recharging\n\n\nVideo\n\n\n\nObstacle avoidance &gt; centroid velocity reference &gt; formation control\n\n\nVideo\n\n\n\n\nDavide De Benedittis, Manolo Garabini, Lucia Pallottino - Managing Conflicting Tasks with Hierarchical Optimization [3]"
+  },
+  {
+    "objectID": "2025-07-31_hqp_for_robot_control/index.html#future-works-non-uniform-time-sampling",
+    "href": "2025-07-31_hqp_for_robot_control/index.html#future-works-non-uniform-time-sampling",
+    "title": "Hierarchical Quadratic Programming for Robot Control",
+    "section": "Future Works – Non-Uniform Time Sampling",
+    "text": "Future Works – Non-Uniform Time Sampling\n\nWhy: Constrained LQR (as most optimal control problems) assumes a uniform time sampling.\n\n\nCore Idea: Embed the sampling durations into the optimization problem. Derive closed-form cost function and gradients that can be precomputed.\n\n\nHow: Use matrix exponentials to propagate the dynamics exactly.\n\n\nKey Results: Provide both Single Shooting and Multiple Shooting formulations with analytical gradients.\n\n\nTake-Away: Let the optimizer decide how to sample the horizon.\n\n\nP. Gori, D. De Benedittis, M. Pierallini, F. Angelini, G. Pannocchia, M. Garabini - Optimal Non-Uniform Time Sampling [4]"
   }
 ]

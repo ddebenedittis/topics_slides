@@ -2,14 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ddebenedittis.github.io/topics_slides/index.html</loc>
-    <lastmod>2025-06-25T12:50:23.409Z</lastmod>
-  </url>
-  <url>
-    <loc>https://ddebenedittis.github.io/topics_slides/2023-07-19_hqp_mpc/index.html</loc>
-    <lastmod>2025-06-25T17:15:11.412Z</lastmod>
+    <lastmod>2025-07-30T11:06:43.815Z</lastmod>
   </url>
   <url>
     <loc>https://ddebenedittis.github.io/topics_slides/2025-06-23_differentiable_optimization/index.html</loc>
-    <lastmod>2025-06-25T16:20:12.402Z</lastmod>
+    <lastmod>2025-07-30T11:06:43.806Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ddebenedittis.github.io/topics_slides/2023-07-19_hqp_mpc/index.html</loc>
+    <lastmod>2025-07-30T11:06:43.798Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ddebenedittis.github.io/topics_slides/2025-07-31_hqp_for_robot_control/index.html</loc>
+    <lastmod>2025-07-31T15:26:42.357Z</lastmod>
   </url>
 </urlset>

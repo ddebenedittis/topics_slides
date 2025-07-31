@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.42">
+
+  <meta name="author" content="Davide De Benedittis">
+  <meta name="dcterms.date" content="2025-07-31">
+  <title>slides-listing – Hierarchical Quadratic Programming for Robot Control</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-77e70fa383fdc6f52d5a5a326f49790e.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-color="#0f4a7c" data-background-image="img/theme/unipi_text_white.webp, img/theme/pisa.png, img/theme/unipi_white.svg, img/theme/dii_white.png, img/theme/cp_white.png" data-background-opacity="1" data-background-position="top 1% right 0.5%, bottom 0% right 0%, top 5% left 10%, top 5% left 25%, top 5% left 40%" data-background-size="auto 35px, auto 100%, auto 10%, auto 10%, auto 10%" class="quarto-title-block center">
+  <h1 class="title">Hierarchical Quadratic Programming for Robot Control</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Davide De Benedittis 
+</div>
+        <p class="quarto-title-affiliation">
+            Università di Pisa
+          </p>
+    </div>
+</div>
+
+  <p class="date">July 31, 2025</p>
+</section>
+<section>
+<section id="mathematical-framework-hierarchical-quadratic-programming" class="title-slide slide level1 center" data-visibility="uncounted">
+<h1>Mathematical Framework: Hierarchical Quadratic Programming</h1>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</section>
+<section id="model-based-control" class="slide level2">
+<h2>Model-Based Control</h2>
+<div class="r-stack">
+<p><video data-src="vid/manim/mbc/1_model.mp4" controls=""><a href="vid/manim/mbc/1_model.mp4">Video</a></video></p>
+<div class="fragment">
+<p><video data-src="vid/manim/mbc/2_state_input.mp4" controls=""><a href="vid/manim/mbc/2_state_input.mp4">Video</a></video></p>
+</div>
+<div class="fragment">
+<p><video data-src="vid/manim/mbc/3_opt_var.mp4" controls=""><a href="vid/manim/mbc/3_opt_var.mp4">Video</a></video></p>
+</div>
+<div class="fragment">
+<p><video data-src="vid/manim/mbc/4_ss.mp4" controls=""><a href="vid/manim/mbc/4_ss.mp4">Video</a></video></p>
+</div>
+<div class="fragment">
+<p><video data-src="vid/manim/mbc/5_ms.mp4" controls=""><a href="vid/manim/mbc/5_ms.mp4">Video</a></video></p>
+</div>
+<div class="fragment">
+<p><video data-src="vid/manim/mbc/6_opt_prob.mp4" controls=""><a href="vid/manim/mbc/6_opt_prob.mp4">Video</a></video></p>
+</div>
+</div>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</section>
+<section id="nonlinear-model-predictive-control" class="slide level2">
+<h2>Nonlinear Model Predictive Control</h2>
+<p><span class="math display">\[
+\begin{align}
+&amp; \min_x \; &amp;&amp; f (x) \\
+&amp; \text{s.t.} \; &amp;&amp; x \in X
+\end{align}
+\]</span></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><video data-src="vid/manim/NMPC.mp4" class="quarto-figure quarto-figure-center" style="width:60.0%" controls=""><a href="vid/manim/NMPC.mp4">Video</a></video></p>
+</figure>
+</div>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</section>
+<section id="convex-model-predictive-control" class="slide level2">
+<h2>Convex Model Predictive Control</h2>
+<div class="columns">
+<div class="column">
+<p><span class="math display">\[
+\begin{align}
+&amp; \min_x \; &amp;&amp; f (x) \\
+&amp; \text{s.t.} \; &amp;&amp; x \in X
+\end{align}
+\]</span></p>
+</div><div class="column">
+<p><span class="math inline">\(f\)</span> is convex</p>
+<p><span class="math inline">\(X\)</span> is a convex set.</p>
+</div></div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><video data-src="vid/manim/CMPC.mp4" class="quarto-figure quarto-figure-center" style="width:60.0%" controls=""><a href="vid/manim/CMPC.mp4">Video</a></video></p>
+</figure>
+</div>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</section>
+<section id="quadratic-programming-qp" class="slide level2">
+<h2>Quadratic Programming (QP)</h2>
+<div class="columns">
+<div class="column">
+<p>Subset of Convex Programming.</p>
+<p>Both <strong>efficient</strong> to solve and <strong>descriptive</strong>.</p>
+<p><span class="math display">\[
+\begin{align}
+&amp; \min_x \; &amp;&amp; x^T Q x + p^T x \\
+&amp; \text{s.t.} \; &amp;&amp; A x = b \\
+&amp; &amp;&amp; C x \leq d
+\end{align}
+\]</span></p>
+</div><div class="column">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/qp.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div></div>
+<!--# ===================================================================== -->
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</section>
+<section id="problem" class="slide level2">
+<h2>Problem 🤕</h2>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="4">
+<div class="quarto-layout-row quarto-layout-valign-center">
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
+<p><img data-src="img/fall1.webp" style="border-radius: 12px;"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
+<p><img data-src="img/fall2.webp" style="border-radius: 12px;"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
+<p><img data-src="img/fall3.webp" style="border-radius: 12px;"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 25.0%;justify-content: center;">
+<p><img data-src="img/fall4.webp" style="border-radius: 12px;"></p>
+</div>
+</div>
+</div>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</section>
+<section id="problem-formulation" class="slide level2">
+<h2>Problem Formulation</h2>
+<p><strong>Problem</strong>: satisfy a set of <strong>tasks</strong> that <strong>cannot be satisfied concurrently</strong>.</p>
+<div class="fragment semi-fade-out" data-fragment-index="1">
+<p>E.g., maintain an end-effector pose (task), avoid obstacles (safety), and minimize energy consumption (efficiency).</p>
+</div>
+<div class="fragment fade-in" data-fragment-index="1">
+<p><strong>Solution</strong>: a <strong>tradeoff</strong> needs to be made among the tasks.</p>
+</div>
+<div class="fragment fade-in-then-semi-out">
+<p>Two approaches can be adopted:</p>
+</div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="fragment fade-in-then-semi-out">
+<p><strong>Weighted Approach</strong></p>
+<ul>
+<li>A <strong>weight</strong> is assigned to each task</li>
+<li>All tasks <strong>solved together</strong></li>
+<li>Tasks <strong>compromise</strong> each other</li>
+</ul>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="fragment fade-in">
+<p><strong>Hierarchical Approach</strong></p>
+<ul>
+<li>A <strong>priority</strong> is assigned to each task</li>
+<li>Solved in a <strong>hierarchical</strong> way</li>
+<li><strong>Low</strong>-priority tasks <strong>do not compromise</strong> <strong>high</strong>er-<strong>priority</strong> ones</li>
+</ul>
+</div>
+</div></div>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+<!--# ===================================================================== -->
+</section>
+<section id="solution-approaches" class="slide level2">
+<h2>Solution Approaches</h2>
+<div class="columns">
+<div id="vcenter" class="column" style="width:50%;">
+<p>Techniques to deal with redundancy:</p>
+<div class="fragment" data-fragment-index="1">
+<ul>
+<li>Standard approach</li>
+</ul>
+</div>
+<div class="fragment" data-fragment-index="2">
+<ul>
+<li>Singularity-robust approach</li>
+</ul>
+</div>
+<div class="fragment" data-fragment-index="3">
+<ul>
+<li>Reverse priority approach</li>
+</ul>
+</div>
+<div class="fragment" data-fragment-index="4">
+<ul>
+<li><strong>Hierarchical Quadratic Programming (HQP)</strong></li>
+</ul>
+</div>
+</div><div id="vcenter" class="column" style="width:50%;">
+<div class="r-stack">
+<div class="fragment fade-in" data-fragment-index="1">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/atlas.png" class="quarto-figure quarto-figure-center" style="border-radius: 12px; filter: grayscale(100%);"></p>
+</figure>
+</div>
+</div>
+<div class="fragment fade-in" data-fragment-index="2">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/atlas.png" class="quarto-figure quarto-figure-center" style="border-radius: 12px;"></p>
+</figure>
+</div>
+</div>
+<div class="fragment fade-in" data-fragment-index="4">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/atlas.webp" class="quarto-figure quarto-figure-center" style="border-radius: 12px;"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+<!--# ===================================================================== -->
+</section>
+<section id="tasks-definition" class="slide level2">
+<h2>Tasks Definition</h2>
+<p>Consider a set of tasks <span class="math inline">\(T_p\)</span> with <span class="math inline">\(p = 1, \dots, n_p\)</span> in the general form <span class="math display">\[
+T_p = \left\lbrace \begin{matrix}
+A_p x - b_p = v_p \\
+C_p x - d_p \leq w_p
+\end{matrix} \right.
+\]</span></p>
+<p>where <span class="math inline">\(v_p\)</span> and <span class="math inline">\(w_p\)</span> are slack variables to be minimized.</p>
+<p>(If the task is feasible, it will be <span class="math inline">\(v_p = 0\)</span> and <span class="math inline">\(w_p = 0\)</span>.)</p>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</section>
+<section id="tasks-reformulation" class="slide level2">
+<h2>Tasks Reformulation</h2>
+<p>A single task <span class="math inline">\(T\)</span> is formulated as the following optimization problem <span class="math display">\[
+\begin{aligned}
+\min_{x, w} \quad &amp; \|{Ax - b}\|_2^2 + \| w \|_2^2 \\
+\textrm{s.t.} \quad &amp; C x - d \leq w.
+\end{aligned}
+\]</span></p>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</section>
+<section id="hierarchical-quadratic-programming-hqp" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Hierarchical Quadratic Programming (HQP)</h2>
+<p>The solution is computed recursively, starting from the highest priority task <span class="math inline">\(T_1\)</span>.</p>
+<ul>
+<li>The <strong>global</strong> solution is denoted as <span class="math inline">\(\overline{x}^*_{p}\)</span> and accounts for all higher priority tasks.</li>
+<li>The <strong>local</strong> solution is denoted as <span class="math inline">\(x^*_{p}\)</span> and accounts only for the current task <span class="math inline">\(T_p\)</span> and higher priority inequality constraints.</li>
+</ul>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</section>
+<section id="hierarchical-quadratic-programming-hqp-1" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Hierarchical Quadratic Programming (HQP)</h2>
+<p>The <strong>solution</strong> is computed <strong>recursively</strong>, starting from the highest priority task <span class="math inline">\(T_1\)</span>.</p>
+<p>The solution up to task <span class="math inline">\(T_{p+1}\)</span> is computed as <span class="math display">\[
+\overline{x}_{p+1}^* = \overline{x}_{p}^* + \overline{N}_p x_{p+1}^*
+\]</span></p>
+<p>The <strong>null space projector</strong> <span class="math inline">\(\overline{N}_p\)</span> is computed <strong>iteratively</strong> with <span class="math display">\[
+\overline{N}_p = \operatorname{Null} \left(\overline{A}_p \right) = \overline{N}_{p-1} \operatorname{Null} \left(A_p \overline{N}_{p-1} \right),
+\]</span></p>
+<p>where <span class="math inline">\(\overline{A}_p = \begin{bmatrix} A_1^T &amp; \cdots &amp; A_p^T \end{bmatrix}^T\)</span>.</p>
+<p>A null space projector can be computed using the SVD decomposition.</p>
+<p>The algorithm is initialized with <span class="math inline">\(\overline{N}_0 = I\)</span>.</p>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</section>
+<section id="hierarchical-quadratic-programming-hqp-2" class="slide level2">
+<h2>Hierarchical Quadratic Programming (HQP)</h2>
+<p><span class="math inline">\(\xi_{p+1}^* = \begin{bmatrix} x_{p+1}^* \\ w_{p+1}^* \end{bmatrix}\)</span> is the solution of a QP problem whose non-null matrices are</p>
+<div style="font-size: 70%;">
+<p><span class="math display">\[
+\begin{alignedat}{3}
+    &amp;Q_{p+1} &amp;&amp;= \begin{bmatrix}
+        \overline{N}_p^T A_{p+1}^T A_{p+1} \overline{N}_p &amp; 0 \\
+        0 &amp; I_{n_{w_{p+1}}}
+    \end{bmatrix}, \quad
+    &amp;&amp;p_{p+1} = \begin{bmatrix}
+        \overline{N}_p^T A_{p+1}^T (A_{p+1}^T \hat{x}_p^* - b_{p+1}) \\
+        0
+    \end{bmatrix}, \\
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    &amp;\hat{C}_{p+1} &amp;&amp;= \begin{bmatrix}
+        C_{p+1} \overline{N}_p &amp; - I_{n_{w_{p+1}}} \\
+        \overline{C}_p \overline{N}_p &amp; 0 \\
+        0 &amp; - I_{n_{w_{p+1}}}
+    \end{bmatrix}, \quad
+    &amp;&amp;\hat{d}_{p+1} = \begin{bmatrix}
+        d_{p+1} - C_{p+1} \hat{x}_p^* \\
+        \overline{d}_{p} - \overline{C}_{p} \hat{x}_p^* + \overline{w}_p^* \\
+        0
+    \end{bmatrix}, \\
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    &amp; \overline{C}_{p} &amp;&amp;= \begin{bmatrix}
+        C_p \\
+        \vdots \\
+        C_1
+    \end{bmatrix}, \quad
+    &amp;&amp; \overline{d}_p = \begin{bmatrix}
+        d_p \\
+        \vdots \\
+        d_1
+    \end{bmatrix}, \quad
+    \overline{w}_p^* = \begin{bmatrix}
+        w_p^* \\
+        \vdots \\
+        w_1^*
+    \end{bmatrix}.
+\end{alignedat}
+\]</span></p>
+<div class="footer">
+<p>Davide De Benedittis - Hierarchical Quadratic Programming</p>
+</div>
+</div>
+<!--# ===================================================================== -->
+</section></section>
+<section>
+<section id="soft-bilinear-inverted-pendulum" class="title-slide slide level1 center">
+<h1>Soft Bilinear Inverted Pendulum 🦿</h1>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+</section>
+<section id="classic-control-scheme" class="slide level2">
+<h2>Classic Control Scheme</h2>
+<video src="vid/manim/single_block_diag.mp4" autoplay="" controls="" muted="" playsinline="" width="100%">
+</video>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+</section>
+<section id="two-blocks-control-scheme" class="slide level2">
+<h2>Two-Blocks Control Scheme</h2>
+<video src="vid/manim/two_block_diag.mp4" autoplay="" controls="" muted="" playsinline="" width="100%">
+</video>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+</section>
+<section id="introduction" class="slide level2 smaller" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Introduction</h2>
+<p><strong>Research Goal</strong>: consider the contact compliance in the control design.</p>
+<p><strong>Contributions</strong>:</p>
+<ul>
+<li>The Soft Bilinear Inverted Pendulum (SBIP) model is proposed and used in the Motion Planner design.​</li>
+<li>A Whole Body Controller is developed using Hierarchical Optimization and a soft contact model.​</li>
+<li>The improvements granted by considering the softness in the MP and the WBC are evaluated.​</li>
+<li>The proposed approach is tested in simulations and experiments.</li>
+</ul>
+
+<img data-src="img/sbip/block_diag.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+</section>
+<section id="soft-bilinear-inverted-pendulum-model" class="slide level2 smaller" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Soft Bilinear Inverted Pendulum Model</h2>
+<div class="columns">
+<div class="column">
+<p>Equations of motion of the SBIP model: <span class="math display">\[
+\begin{align}
+    \ddot{x}_{CoM} &amp;= \frac{g + \ddot{z}_{CoM}}{h_{CoM}} (x_{CoM} - x_{ZMP}) \\
+    \ddot{y}_{CoM} &amp;= \frac{g + \ddot{z}_{CoM}}{h_{CoM}} (y_{CoM} - y_{ZMP}) \\
+    \ddot{z}_{CoM} &amp;= - \ddot{\delta} = - g + 1/m (k_p \delta + k_d \dot{\delta})
+\end{align}
+\]</span></p>
+<p><strong>Simplified</strong> model used to plan the base and feet trajectories over a <strong>long horizon</strong>.</p>
+<p>The planner is a QP-based MPC that tracks a base velocity reference.</p>
+</div><div class="column">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/sbip/sbip.svg" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div></div>
+<p><img data-src="img/sbip/block_diag.svg" class="absolute" style="bottom: 0px; right: 0px; width: 350px; "></p>
+<div style="background: rgba(255, 255, 255, 0.8); width: 220px; height: 120px; position: absolute; bottom: 0px; right: 0px;">
+
+</div>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+</section>
+<section id="tracking-controller" class="slide level2 smaller">
+<h2>Tracking Controller</h2>
+<div class="columns">
+<div class="column">
+<p><strong>Full</strong> robot <strong>model</strong> used to plan over a <strong>short horizon</strong> with <strong>higher fidelity</strong>.</p>
+<p>The equations of motion of a legged robot are <span class="math display">\[
+M(q) \ddot{q} + h(q, \dot{q}) = S^T \tau J^T (q) f
+\]</span> which can be split into the underactuated and actuated part as <span class="math display">\[
+\begin{align}
+M_a (q) \ddot{v} + h_a (q, v) &amp;= \tau + J_a^T (q) f \\
+M_u (q) \ddot{q} + h_u (q, v) &amp;= J_u^T (q) f
+\end{align}
+\]</span></p>
+<p>The optimization vector is <span class="math display">\[
+x_{opt} = \begin{bmatrix}
+    \dot{v}^T &amp; f^T &amp; \delta_d^T
+\end{bmatrix}^T
+\]</span></p>
+<p>From the optimization vector and the robot model, the joint torques are <span class="math display">\[
+\tau^* = M_a (q) \dot{v}^* + h_a (q, v) - J_a^T (q) f^*
+\]</span></p>
+</div><div class="column">
+<table>
+<thead>
+<tr>
+<th style="width:20%">
+Priority
+</th>
+<th style="width:80%">
+Tasks
+</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom: 1px solid #aaa;">
+<td>
+1
+</td>
+<td>
+Physical consistency
+</td>
+</tr>
+<tr>
+<td rowspan="3">
+2
+</td>
+<td>
+Actuation torque limits
+</td>
+</tr>
+<tr>
+<td>
+Contact friction cone limits
+</td>
+</tr>
+<tr style="border-bottom: 1px solid #aaa;">
+<td>
+Force modulation
+</td>
+</tr>
+<tr style="border-bottom: 1px solid #aaa;">
+<td>
+3
+</td>
+<td>
+Contact constraints
+</td>
+</tr>
+<tr>
+<td rowspan="3">
+4
+</td>
+<td>
+Base linear trajectory tracking
+</td>
+</tr>
+<tr>
+<td>
+Base angular trajectory tracking
+</td>
+</tr>
+<tr style="border-bottom: 1px solid #aaa;">
+<td>
+Swing feet trajectory tracking
+</td>
+</tr>
+<tr>
+<td rowspan="2">
+5
+</td>
+<td>
+Energy minimization
+</td>
+</tr>
+<tr>
+<td>
+Contact forces minimization
+</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<p><img data-src="img/sbip/block_diag.svg" class="absolute" style="bottom: 0px; right: 0px; width: 350px; "></p>
+<div style="background: rgba(255, 255, 255, 0.8); width: 125px; height: 120px; position: absolute; bottom: 0px; right: 225px;">
+
+</div>
+<div style="background: rgba(255, 255, 255, 0.8); width: 70px; height: 120px; position: absolute; bottom: 0px; right: 0px;">
+
+</div>
+<div style="background: rgba(255, 255, 255, 0.8); width: 350px; height: 40px; position: absolute; bottom: 0px; right: 0px;">
+
+</div>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+</section>
+<section id="validation-in-simulation" class="slide level2">
+<h2>Validation in Simulation</h2>
+<div class="columns">
+<div class="column">
+<p>ANYmal C robot</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><video data-src="vid/sbip/anymal_c.webm" class="quarto-figure quarto-figure-center" style="border-radius: 12px;" controls=""><a href="vid/sbip/anymal_c.webm">Video</a></video></p>
+</figure>
+</div>
+</div><div class="column">
+<p>SOLO12 robot</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><video data-src="vid/sbip/solo12.webm" class="quarto-figure quarto-figure-center" style="border-radius: 12px;" controls=""><a href="vid/sbip/solo12.webm">Video</a></video></p>
+</figure>
+</div>
+</div></div>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+</section>
+<section id="comparison-in-simulation" class="slide level2">
+<h2>Comparison in Simulation</h2>
+<div class="columns">
+<div class="column">
+<p>State of the art -&gt; failure</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><video data-src="vid/sbip/fall.webm" class="quarto-figure quarto-figure-center" style="border-radius: 12px;" controls=""><a href="vid/sbip/fall.webm">Video</a></video></p>
+</figure>
+</div>
+</div><div class="column">
+<p>Proposed approach -&gt; success</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><video data-src="vid/sbip/nofall.webm" class="quarto-figure quarto-figure-center" style="border-radius: 12px;" controls=""><a href="vid/sbip/nofall.webm">Video</a></video></p>
+</figure>
+</div>
+</div></div>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+</section>
+<section id="comparison-in-simulation-1" class="slide level2">
+<h2>Comparison in Simulation</h2>
+<p>Four controller configurations compared using four KPIs and two different scenarios.</p>
+
+<img data-src="img/sbip/kpi.svg" class="quarto-figure quarto-figure-center r-stretch"><div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+</section>
+<section id="experimental-results" class="slide level2">
+<h2>Experimental Results</h2>
+<p>Tested with the SOLO12 robot on a foam rubber terrain.</p>
+<div class="columns">
+<div class="column">
+<p>Flat ground</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><video data-src="vid/sbip/exp0.webm" class="quarto-figure quarto-figure-center" style="border-radius: 12px;" controls=""><a href="vid/sbip/exp0.webm">Video</a></video></p>
+</figure>
+</div>
+</div><div class="column">
+<p>Inclined ground</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><video data-src="vid/sbip/exp10.webm" class="quarto-figure quarto-figure-center" style="border-radius: 12px;" controls=""><a href="vid/sbip/exp10.webm">Video</a></video></p>
+</figure>
+</div>
+</div></div>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+</section>
+<section id="sbip-conclusion" class="slide level2">
+<h2>SBIP Conclusion</h2>
+<ul>
+<li>Considering the terrain characteristics in both components of a two-blocks control scheme is beneficial.</li>
+<li>SBIP model is a good compromise between fidelity and computational efficiency.</li>
+<li>HQP deals with tasks priorities effectively.</li>
+</ul>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></p>
+</div>
+<!--# ===================================================================== -->
+<!--#                             KEEP IT COOL                              -->
+<!--# ===================================================================== -->
+</section></section>
+<section>
+<section id="keep-it-cool" class="title-slide slide level1 center">
+<h1>Keep It Cool 🔥</h1>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+</section>
+<section id="problem-1" class="slide level2">
+<h2>Problem</h2>
+<h3 id="actuators-overheating-during-prolonged-use.">Actuators overheating during prolonged use.</h3>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="3">
+<div class="quarto-layout-row quarto-layout-valign-center">
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/fire_1.webp" class="quarto-figure quarto-figure-center" style="border-radius: 12px;"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/fire_2.webp" class="quarto-figure quarto-figure-center" style="border-radius: 12px;"></p>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 33.3%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/fire_4.webp" class="quarto-figure quarto-figure-center" style="border-radius: 12px;"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+<!--# ===================================================================== -->
+</section>
+<section id="introduction-1" class="slide level2">
+<h2>Introduction</h2>
+<div class="columns">
+<div class="column">
+<p><strong>Research Goal</strong>: guarantee thermal safety and optimal performance using control.</p>
+<p><strong>Contributions</strong>:</p>
+<ul>
+<li>Consider the thermal dynamics in the control design.</li>
+<li>HQP based approach for constraints prioritization.</li>
+<li>Ablation study to evaluate the impact on performance.</li>
+</ul>
+</div><div class="column">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/kic/robot.svg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div></div>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+<!--# ===================================================================== -->
+</section>
+<section id="control-architecture" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Control Architecture</h2>
+<p>First order thermal model <span class="math display">\[
+\dot{T} = - \alpha (T - T_\text{amb}) + \beta | \tau |
+\]</span></p>
+
+<img data-src="img/kic/system_identification.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="control-architecture-1" class="slide level2 smaller" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Control Architecture</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/kic/block_diag.png" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+<p><img data-src="img/kic/system_identification.png" class="absolute" style="top: 20.5%; left: 8%; width: 5%; "></p>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p>Optimization vector: <span class="math display">\[
+x = \begin{bmatrix} q^T &amp; \dot{q}^T &amp; T^T &amp; \tau_s^T \end{bmatrix}^T
+\]</span></p>
+</div><div class="column" style="width:60%;">
+<p>Tasks:</p>
+<ul>
+<li>Dynamic consistency, Thermal model, Epigraph reformulation</li>
+<li>Thermal safety, Safety limits</li>
+<li>Primary task (e.g., end-effector pose)</li>
+<li>Secondary tasks (e.g., control energy minimization)</li>
+</ul>
+</div></div>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+<!--# ===================================================================== -->
+</section>
+<section id="results---reach-and-hold" class="slide level2">
+<h2>Results - Reach and Hold</h2>
+
+<img data-src="img/kic/reach_and_hold_2.png" class="quarto-figure quarto-figure-center r-stretch"><div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+</section>
+<section id="section" class="slide level2" data-background-video="vid/kic/reach_and_hold.mp4">
+<h2></h2>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+</section>
+<section id="results---circle" class="slide level2">
+<h2>Results - Circle</h2>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+
+<img data-src="img/kic/circle_2.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="section-1" class="slide level2" data-background-video="vid/kic/circle.mp4">
+<h2></h2>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+</section>
+<section id="results---lemniscate" class="slide level2">
+<h2>Results - Lemniscate</h2>
+
+<img data-src="img/kic/lemniscate_2.png" class="quarto-figure quarto-figure-center r-stretch"><div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+</section>
+<section id="section-2" class="slide level2" data-background-video="vid/kic/lemniscate.mp4">
+<h2></h2>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+</section>
+<section id="conclusion" class="slide level2">
+<h2>Conclusion</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>Considering the temerature dynamics in the control can avoid overdimensioning the hardware or downsizing the task.</li>
+<li>HQP effectively guarantees thermal safety.</li>
+<li>Other approaches (e.g., CBFs) can further enhance performance in certain scenarios.</li>
+</ul>
+</div><div class="column">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/fire_3.webp" class="quarto-figure quarto-figure-center" style="border-radius: 12px;"></p>
+</figure>
+</div>
+</div></div>
+<div class="footer">
+<p>Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></p>
+</div>
+</section></section>
+<section>
+<section id="conclusion-1" class="title-slide slide level1 center">
+<h1>Conclusion 🏁</h1>
+
+</section>
+<section id="conclusion-2" class="slide level2">
+<h2>Conclusion</h2>
+<ul>
+<li>HQP allows to solve a set of tasks while enforcing a priority order</li>
+<li>It has been successfully applied to:
+<ul>
+<li>Legged locomotion on compliant terrains <span class="citation" data-cites="debenedittis2025soft"><a href="#/references" role="doc-biblioref" onclick="">[1]</a></span></li>
+<li>Thermal safety in robots <span class="citation" data-cites="debenedittis2025keep"><a href="#/references" role="doc-biblioref" onclick="">[2]</a></span></li>
+</ul></li>
+<li>Other potential application:
+<ul>
+<li>Multi-robot control <span class="citation" data-cites="debenedittis2025managing"><a href="#/references" role="doc-biblioref" onclick="">[3]</a></span></li>
+</ul></li>
+<li>Future works:
+<ul>
+<li>Non-uniform time sampling <span class="citation" data-cites="gori2025optimal"><a href="#/references" role="doc-biblioref" onclick="">[4]</a></span></li>
+</ul></li>
+</ul>
+</section>
+<section id="future-works-multi-robot-control" class="slide level2 smaller">
+<h2>Future Works – Multi-Robot Control</h2>
+<ul>
+<li>Multi-robot setting</li>
+<li>HQP to manage multiple concurrent and potentially conflicting tasks</li>
+</ul>
+<div class="columns">
+<div class="column">
+<p>Heterogeneous coverage and battery recharging</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><video data-src="vid/managing/cov_4u2o.mp4" class="quarto-figure quarto-figure-center" controls=""><a href="vid/managing/cov_4u2o.mp4">Video</a></video></p>
+</figure>
+</div>
+</div><div class="column">
+<p>Obstacle avoidance &gt; centroid velocity reference &gt; formation control</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><video data-src="vid/managing/obs_comvel_form.mp4" class="quarto-figure quarto-figure-center" controls=""><a href="vid/managing/obs_comvel_form.mp4">Video</a></video></p>
+</figure>
+</div>
+</div></div>
+<div class="footer">
+<p>Davide De Benedittis, Manolo Garabini, Lucia Pallottino - Managing Conflicting Tasks with Hierarchical Optimization <span class="citation" data-cites="debenedittis2025managing"><a href="#/references" role="doc-biblioref" onclick="">[3]</a></span></p>
+</div>
+</section>
+<section id="future-works-non-uniform-time-sampling" class="slide level2">
+<h2>Future Works – Non-Uniform Time Sampling</h2>
+<div class="fragment semi-fade-out" data-fragment-index="1">
+<p><strong>Why</strong>: Constrained LQR (as most optimal control problems) assumes a uniform time sampling.</p>
+</div>
+<div class="fragment fade-in-then-semi-out" data-fragment-index="1">
+<p><strong>Core Idea</strong>: Embed the sampling durations into the optimization problem. Derive closed-form cost function and gradients that can be precomputed.</p>
+</div>
+<div class="fragment fade-in-then-semi-out" data-fragment-index="2">
+<p><strong>How</strong>: Use matrix exponentials to propagate the dynamics exactly.</p>
+</div>
+<div class="fragment fade-in-then-semi-out" data-fragment-index="3">
+<p><strong>Key Results</strong>: Provide both Single Shooting and Multiple Shooting formulations with analytical gradients.</p>
+</div>
+<div class="fragment fade-in-then-semi-out" data-fragment-index="4">
+<p><strong>Take-Away</strong>: Let the optimizer decide how to sample the horizon.</p>
+</div>
+<div class="footer">
+<p>P. Gori, D. De Benedittis, M. Pierallini, F. Angelini, G. Pannocchia, M. Garabini - Optimal Non-Uniform Time Sampling <span class="citation" data-cites="gori2025optimal"><a href="#/references" role="doc-biblioref" onclick="">[4]</a></span></p>
+</div>
+</section></section>
+<section id="references" class="title-slide slide level1 smaller scrollable" data-visibility="uncounted">
+<h1>References 📚</h1>
+<div id="refs" class="references csl-bib-body" data-entry-spacing="0" role="list">
+<div id="ref-debenedittis2025soft" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">D. De Benedittis, F. Angelini, and M. Garabini, <span>“Soft bilinear inverted pendulum: A model to enable locomotion with soft contacts,”</span> <em>IEEE Transactions on Systems, Man, and Cybernetics: Systems</em>, vol. 55, no. 2, pp. 1478–1491, 2025, doi: <a href="https://doi.org/10.1109/TSMC.2024.3504342">10.1109/TSMC.2024.3504342</a>.</div>
+</div>
+<div id="ref-debenedittis2025keep" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">D. De Benedittis, F. Angelini, R. Incerpi, L. Pallottino, and M. Garabini, <span>“Keep it cool: Optimal control of robotic systems under temperature constraints,”</span> <em>IEEE Transactions on Robotics</em>, Under Review.</div>
+</div>
+<div id="ref-debenedittis2025managing" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[3] </div><div class="csl-right-inline">D. De Benedittis, M. Garabini, and L. Pallottino, <span>“Managing conflicting tasks in heterogeneous multi-robot systems through hierarchical optimization,”</span> <em>IEEE Robotics and Automation Letters</em>, vol. 10, no. 6, pp. 5305–5312, 2025, doi: <a href="https://doi.org/10.1109/LRA.2025.3559843">10.1109/LRA.2025.3559843</a>.</div>
+</div>
+<div id="ref-gori2025optimal" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[4] </div><div class="csl-right-inline">P. Gori, D. De Benedittis, M. Pierallini, F. Angelini, G. Pannocchia, and M. Garabini, <span>“Optimal non-uniform time sampling in continuous-time constrained LQR,”</span> <em>IEEE Transactions on Automatic Control</em>, Under Review.</div>
+</div>
+</div>
+</section>
+
+<section id="grazie-per-lattenzione" class="title-slide slide level1 center" data-background-color="#0f4a7c" data-background-image="img/theme/p3.png" data-background-size="100% 100%" data-background-position="50% 50%" data-visibility="uncounted">
+<h1>Grazie Per L’Attenzione (◕‿◕)</h1>
+<p>Contact me at:</p>
+<ul>
+<li>davide.debenedittis@phd.unipi.it</li>
+</ul>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Davide De Benedittis</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': true,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: true,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
