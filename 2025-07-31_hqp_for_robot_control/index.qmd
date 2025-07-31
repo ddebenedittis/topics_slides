@@ -1,0 +1,839 @@
+---
+title: Hierarchical Quadratic Programming for Robot Control
+author: "Davide De Benedittis"
+institute: "Università di Pisa"
+date: "31 July 2025"
+toc: false
+format:
+    cp-revealjs:
+        width: 1280
+        margin: 0.1
+        title-slide-attributes:
+            data-background-color: "#0f4a7c"
+            data-background-image: "https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/unipi_text_white.webp, https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/pisa.png, https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/unipi_white.svg, https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/dii_white.png, https://raw.githubusercontent.com/ddebenedittis/topics_slides/main/_extensions/ddebenedittis/unipi/img/cp_white.png"
+            data-background-opacity: "1"
+            data-background-position: "top 1% right 0.5%, bottom 0% right 0%, top 10% left 10%, top 10% left 25%, top 10% left 40%"
+            data-background-size: "auto 35px, auto 100%, auto 10%, auto 10%, auto 10%"
+        ### Navigation
+        controls: true
+        ### Print to PDF
+        pdf-separate-fragments: true
+        touch: true
+        embed-resources: false
+        ### Media
+        auto-play-media: true
+        ### Figures
+        fig-cap-location: top
+        ### Footer
+        footer: Davide De Benedittis
+bibliography: refs.bib
+csl: IEEEtran.csl
+---
+
+# Mathematical Framework: Hierarchical Quadratic Programming {visibility="uncounted"}
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+## Model-Based Control
+
+::: {.r-stack}
+![](vid/manim/mbc/1_model.mp4)
+
+::: {.fragment}
+![](vid/manim/mbc/2_state_input.mp4)
+:::
+
+::: {.fragment}
+![](vid/manim/mbc/3_opt_var.mp4)
+:::
+
+::: {.fragment}
+![](vid/manim/mbc/4_ss.mp4)
+:::
+
+::: {.fragment}
+![](vid/manim/mbc/5_ms.mp4)
+:::
+
+::: {.fragment}
+![](vid/manim/mbc/6_opt_prob.mp4)
+:::
+:::
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+## Nonlinear Model Predictive Control
+
+$$
+\begin{align}
+& \min_x \; && f (x) \\
+& \text{s.t.} \; && x \in X
+\end{align}
+$$
+
+![](vid/manim/NMPC.mp4){fig-align="center" width="60%"}
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+## Convex Model Predictive Control
+
+:::: {.columns}
+::: {.column}
+$$
+\begin{align}
+& \min_x \; && f (x) \\
+& \text{s.t.} \; && x \in X
+\end{align}
+$$
+:::
+
+::: {.column}
+$f$ is convex
+
+$X$ is a convex set.
+:::
+::::
+
+![](vid/manim/CMPC.mp4){fig-align="center" width="60%"}
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+## Quadratic Programming (QP)
+
+:::: {.columns}
+::: {.column}
+Subset of Convex Programming.
+
+Both **efficient** to solve and **descriptive**.
+
+$$
+\begin{align}
+& \min_x \; && x^T Q x + p^T x \\
+& \text{s.t.} \; && A x = b \\
+& && C x \leq d
+\end{align}
+$$
+:::
+
+::: {.column}
+![](img/qp.png){width="60%" fig-align="center"}
+:::
+::::
+
+<!--# ===================================================================== -->
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+## Problem 🤕
+
+**Problem**: solve a set of **tasks** that **cannot be satisfied concurrently**.
+
+E.g., maintain an end-effector pose (task), avoid obstacles (safety), and minimize energy consumption (efficiency).
+
+::: {layout-ncol=4 layout-valign="center"}
+![](img/fall1.webp){fig-align="center" style="border-radius: 12px;"}
+
+![](img/fall2.webp){fig-align="center" style="border-radius: 12px;"}
+
+![](img/fall3.webp){fig-align="center" style="border-radius: 12px;"}
+
+![](img/fall4.webp){fig-align="center" style="border-radius: 12px;"}
+:::
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+## Problem Formulation
+
+**Problem**: solve a set of **tasks** that **cannot be satisfied concurrently**.
+
+::: {.fragment .fade-in-then-semi-out fragment-index="1"}
+**Solution**: a **tradeoff** needs to be made among the tasks.
+:::
+
+::: {.fragment .fade-in-then-semi-out}
+Two approaches can be adopted:
+:::
+
+::::: {.columns}
+
+:::: {.column width="50%"}
+::: {.fragment .fade-in-then-semi-out}
+**Weighted Approach**
+
+- A **weight** is assigned to each task
+- All tasks **solved together**
+- Tasks **compromise** each other
+:::
+::::
+
+:::: {.column width="50%"}
+::: {.fragment .fade-in}
+**Hierarchical Approach**
+
+- A **priority** is assigned to each task
+- Solved in a **hierarchical** way
+- **Low**-priority tasks **do not compromise** **high**er-**priority** ones
+:::
+::::
+:::::
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+<!--# ===================================================================== -->
+
+## Solution Approaches
+
+::::: {.columns}
+:::: {.column width="50%" #vcenter}
+Techniques to deal with redundancy:
+
+::: {.fragment fragment-index="1"}
+- Standard approach
+:::
+
+::: {.fragment fragment-index="2"}
+- Singularity-robust approach
+:::
+
+::: {.fragment fragment-index="3"}
+- Reverse priority approach
+:::
+
+::: {.fragment fragment-index="4"}
+- **Hierarchical Quadratic Programming (HQP)**
+:::
+::::
+
+::: {.column width="50%" #vcenter}
+::: {.r-stack}
+::: {.fragment .fade-in fragment-index="1"}
+![](img/atlas.png){fig-align="center" style="border-radius: 12px; filter: grayscale(100%);"}
+:::
+
+::: {.fragment .fade-in fragment-index="2"}
+![](img/atlas.png){fig-align="center" style="border-radius: 12px;"}
+:::
+
+::: {.fragment .fade-in fragment-index="4"}
+![](img/atlas.webp){fig-align="center" style="border-radius: 12px;"}
+:::
+:::
+:::
+:::::
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+<!--# ===================================================================== -->
+
+## Tasks Definition
+
+Consider a set of tasks $T_p$ with $p = 1, \dots, n_p$ in the general form
+$$
+T_p = \left\lbrace \begin{matrix}
+A_p x - b_p = v_p \\
+C_p x - d_p \leq w_p
+\end{matrix} \right.
+$$
+
+where $v_p$ and $w_p$ are slack variables to be minimized.
+
+(If the task is feasible, it will be $v_p = 0$ and $w_p = 0$.)
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+## Tasks Reformulation
+
+A single task $T$ is formulated as the following optimization problem
+$$
+\begin{aligned}
+\min_{x, w} \quad & \|{Ax - b}\|_2^2 + \| w \|_2^2 \\
+\textrm{s.t.} \quad & C x - d \leq w.
+\end{aligned}
+$$
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+## Hierarchical Quadratic Programming (HQP) {auto-animate=true}
+
+The solution is computed recursively, starting from the highest priority task $T_1$.
+
+- The **global** solution is denoted as $\overline{x}^*_{p}$ and accounts for all higher priority tasks.
+- The **local** solution is denoted as $x^*_{p}$ and accounts only for the current task $T_p$ and higher priority inequality constraints.
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+## Hierarchical Quadratic Programming (HQP) {auto-animate=true}
+
+The **solution** is computed **recursively**, starting from the highest priority task $T_1$.
+
+The solution up to task $T_{p+1}$ is computed as
+$$
+\overline{x}_{p+1}^* = \overline{x}_{p}^* + \overline{N}_p x_{p+1}^*
+$$
+
+The **null space projector** $\overline{N}_p$ is computed **iteratively** with
+$$
+\overline{N}_p = \operatorname{Null} \left(\overline{A}_p \right) = \overline{N}_{p-1} \operatorname{Null} \left(A_p \overline{N}_{p-1} \right),
+$$
+
+where $\overline{A}_p = \begin{bmatrix} A_1^T & \cdots & A_p^T \end{bmatrix}^T$.
+
+A null space projector can be computed using the SVD decomposition.
+
+The algorithm is initialized with $\overline{N}_0 = I$.
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+
+## Hierarchical Quadratic Programming (HQP)
+
+$\xi_{p+1}^* = \begin{bmatrix} x_{p+1}^* \\ w_{p+1}^* \end{bmatrix}$ is the solution of a QP problem whose non-null matrices are
+
+::: {style="font-size: 70%;"}
+$$
+\begin{alignedat}{3}
+    &Q_{p+1} &&= \begin{bmatrix}
+        \overline{N}_p^T A_{p+1}^T A_{p+1} \overline{N}_p & 0 \\
+        0 & I_{n_{w_{p+1}}}
+    \end{bmatrix}, \quad
+    &&p_{p+1} = \begin{bmatrix}
+        \overline{N}_p^T A_{p+1}^T (A_{p+1}^T \hat{x}_p^* - b_{p+1}) \\
+        0
+    \end{bmatrix}, \\
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    &\hat{C}_{p+1} &&= \begin{bmatrix}
+        C_{p+1} \overline{N}_p & - I_{n_{w_{p+1}}} \\
+        \overline{C}_p \overline{N}_p & 0 \\
+        0 & - I_{n_{w_{p+1}}}
+    \end{bmatrix}, \quad
+    &&\hat{d}_{p+1} = \begin{bmatrix}
+        d_{p+1} - C_{p+1} \hat{x}_p^* \\
+        \overline{d}_{p} - \overline{C}_{p} \hat{x}_p^* + \overline{w}_p^* \\
+        0
+    \end{bmatrix}, \\
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    & \overline{C}_{p} &&= \begin{bmatrix}
+        C_p \\
+        \vdots \\
+        C_1
+    \end{bmatrix}, \quad
+    && \overline{d}_p = \begin{bmatrix}
+        d_p \\
+        \vdots \\
+        d_1
+    \end{bmatrix}, \quad
+    \overline{w}_p^* = \begin{bmatrix}
+        w_p^* \\
+        \vdots \\
+        w_1^*
+    \end{bmatrix}.
+\end{alignedat}
+$$
+
+::: {.footer}
+Davide De Benedittis - Hierarchical Quadratic Programming
+:::
+:::
+
+<!--# ===================================================================== -->
+
+# Soft Bilinear Inverted Pendulum 🦿
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+## Classic Control Scheme
+
+<video src="vid/manim/single_block_diag.mp4" autoplay controls muted playsinline width="100%"></video>
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+## Two-Blocks Control Scheme
+
+<video src="vid/manim/two_block_diag.mp4" autoplay controls muted playsinline width="100%"></video>
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+## Introduction {.smaller auto-animate=true}
+
+**Research Goal**: consider the contact compliance in the control design.
+
+**Contributions**:
+
+- The Soft Bilinear Inverted Pendulum (SBIP) model is proposed and used in the Motion Planner design.​
+- A Whole Body Controller is developed using Hierarchical Optimization and a soft contact model.​
+- The improvements granted by considering the softness in the MP and the WBC are evaluated.​
+- The proposed approach is tested in simulations and experiments.
+
+![](img/sbip/block_diag.svg){fig-align="center"}
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+## Soft Bilinear Inverted Pendulum Model {.smaller auto-animate=true}
+
+:::: {.columns}
+::: {.column}
+Equations of motion of the SBIP model:
+$$
+\begin{align}
+    \ddot{x}_{CoM} &= \frac{g + \ddot{z}_{CoM}}{h_{CoM}} (x_{CoM} - x_{ZMP}) \\
+    \ddot{y}_{CoM} &= \frac{g + \ddot{z}_{CoM}}{h_{CoM}} (y_{CoM} - y_{ZMP}) \\
+    \ddot{z}_{CoM} &= - \ddot{\delta} = - g + 1/m (k_p \delta + k_d \dot{\delta})
+\end{align}
+$$
+
+**Simplified** model used to plan the base and feet trajectories over a **long horizon**.
+
+The planner is a QP-based MPC that tracks a base velocity reference.
+:::
+
+::: {.column}
+![](img/sbip/sbip.svg){width="100%" fig-align="center"}
+:::
+::::
+
+![](img/sbip/block_diag.svg){.absolute bottom=0 right=0 width=350}
+
+::: {style="background: rgba(255, 255, 255, 0.8); width: 220px; height: 120px; position: absolute; bottom: 0px; right: 0px;"}
+:::
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+## Tracking Controller {.smaller}
+
+:::: {.columns}
+::: {.column}
+**Full** robot **model** used to plan over a **short horizon** with **higher fidelity**.
+
+The equations of motion of a legged robot are
+$$
+M(q) \ddot{q} + h(q, \dot{q}) = S^T \tau + J^T (q) f
+$$
+which can be split into the underactuated and actuated part as
+$$
+\begin{align}
+M_a (q) \ddot{v} + h_a (q, v) &= \tau + J_a^T (q) f \\
+M_u (q) \ddot{q} + h_u (q, v) &= J_u^T (q) f
+\end{align}
+$$
+
+The optimization vector is
+$$
+x_{opt} = \begin{bmatrix}
+    \dot{v}^T & f^T & \delta_d^T
+\end{bmatrix}^T
+$$
+
+From the optimization vector and the robot model, the joint torques are
+$$
+\tau^* = M_a (q) \dot{v}^* + h_a (q, v) - J_a^T (q) f^*
+$$
+:::
+
+::: {.column}
+<table>
+  <thead>
+    <tr>
+      <th style="width:20%">Priority</th>
+      <th style="width:80%">Tasks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom: 1px solid #aaa;">
+      <td>1</td>
+      <td>Physical consistency</td>
+    </tr>
+    <tr>
+      <td rowspan="3">2</td>
+      <td>Actuation torque limits</td>
+    </tr>
+    <tr>
+      <td>Contact friction cone limits</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #aaa;">
+      <td>Force modulation</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #aaa;">
+      <td>3</td>
+      <td>**Soft contact constraints**</td>
+    </tr>
+    <tr>
+      <td rowspan="3">4</td>
+      <td>Base linear trajectory tracking</td>
+    </tr>
+    <tr>
+      <td>Base angular trajectory tracking</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #aaa;">
+      <td>Swing feet trajectory tracking</td>
+    </tr>
+    <tr>
+      <td rowspan="2">5</td>
+      <td>Energy minimization</td>
+    </tr>
+    <tr>
+      <td>Contact forces minimization</td>
+    </tr>
+  </tbody>
+</table>
+:::
+::::
+
+![](img/sbip/block_diag.svg){.absolute bottom=0 right=0 width=350}
+
+::: {style="background: rgba(255, 255, 255, 0.8); width: 125px; height: 120px; position: absolute; bottom: 0px; right: 225px;"}
+:::
+
+::: {style="background: rgba(255, 255, 255, 0.8); width: 70px; height: 120px; position: absolute; bottom: 0px; right: 0px;"}
+:::
+
+::: {style="background: rgba(255, 255, 255, 0.8); width: 350px; height: 40px; position: absolute; bottom: 0px; right: 0px;"}
+:::
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+## Validation in Simulation
+
+:::: {.columns}
+::: {.column}
+ANYmal C robot
+
+![](vid/sbip/anymal_c.webm){fig-align="center" style="border-radius: 12px;"}
+:::
+
+::: {.column}
+SOLO12 robot
+
+![](vid/sbip/solo12.webm){fig-align="center" style="border-radius: 12px;"}
+:::
+::::
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+## Comparison in Simulation
+
+:::: {.columns}
+::: {.column}
+State of the art -> failure
+
+![](vid/sbip/fall.webm){fig-align="center" style="border-radius: 12px;"}
+:::
+
+::: {.column}
+Proposed approach -> success
+
+![](vid/sbip/nofall.webm){fig-align="center" style="border-radius: 12px;"}
+:::
+::::
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+## Comparison in Simulation
+
+Four controller configurations compared using four KPIs and two different scenarios.
+
+![](img/sbip/kpi.svg){fig-align="center"}
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+## Experimental Results
+
+Tested with the SOLO12 robot on a foam rubber terrain.
+
+:::: {.columns}
+::: {.column}
+Flat ground
+
+![](vid/sbip/exp0.webm){fig-align="center" style="border-radius: 12px;"}
+:::
+
+::: {.column}
+Inclined ground
+
+![](vid/sbip/exp10.webm){fig-align="center" style="border-radius: 12px;"}
+:::
+::::
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+## SBIP Conclusion
+
+- Considering the terrain characteristics in both components of a two-blocks control scheme is beneficial.
+- SBIP model is a good compromise between fidelity and computational efficiency.
+- HQP deals with tasks priorities effectively.
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Manolo Garabini - Soft Bilinear Inverted Pendulum [@debenedittis2025soft]
+:::
+
+<!--# ===================================================================== -->
+<!--#                             KEEP IT COOL                              -->
+<!--# ===================================================================== -->
+
+# Keep It Cool 🔥
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+## Problem
+
+### Actuators overheating during prolonged use.
+
+::: {layout-ncol=3 layout-valign="center"}
+![](img/fire_1.webp){fig-align="center" style="border-radius: 12px;"}
+
+![](img/fire_2.webp){fig-align="center" style="border-radius: 12px;"}
+
+![](img/fire_4.webp){fig-align="center" style="border-radius: 12px;"}
+:::
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+<!--# ===================================================================== -->
+
+## Introduction
+
+:::: {.columns}
+::: {.column}
+**Research Goal**: guarantee thermal safety and optimal performance using control.
+
+**Contributions**:
+
+- Consider the thermal dynamics in the control design.
+- HQP based approach for constraints prioritization.
+- Ablation study to evaluate the impact on performance.
+:::
+
+::: {.column}
+![](img/kic/robot.svg){fig-align="center"}
+:::
+::::
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+<!--# ===================================================================== -->
+
+## Control Architecture {auto-animate=true}
+
+First order thermal model
+$$
+\dot{T} = - \alpha (T - T_\text{amb}) + \beta | \tau |
+$$ 
+
+![](img/kic/system_identification.png){fig-align="center"}
+
+## Control Architecture {.smaller auto-animate=true}
+
+![](img/kic/block_diag.png){fig-align="center"}
+
+![](img/kic/system_identification.png){.absolute top=20.5% left=8% width=5%}
+
+:::: {.columns}
+::: {.column width="40%"}
+Optimization vector:
+$$
+x = \begin{bmatrix} q^T & \dot{q}^T & T^T & \tau_s^T \end{bmatrix}^T
+$$
+:::
+
+::: {.column width="60%"}
+Tasks:
+
+- Dynamic consistency, Thermal model, Epigraph reformulation
+- Thermal safety, Safety limits
+- Primary task (e.g., end-effector pose)
+- Secondary tasks (e.g., control energy minimization)
+:::
+::::
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+<!--# ===================================================================== -->
+
+## Results - Reach and Hold
+
+![](img/kic/reach_and_hold_2.png){fig-align="center"}
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+## {background-video="vid/kic/reach_and_hold.mp4"}
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+## Results - Circle
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+![](img/kic/circle_2.png){fig-align="center"}
+
+## {background-video="vid/kic/circle.mp4"}
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+## Results - Lemniscate
+
+![](img/kic/lemniscate_2.png){fig-align="center"}
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+## {background-video="vid/kic/lemniscate.mp4"}
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+## Conclusion
+
+:::: {.columns}
+::: {.column}
+
+- Considering the temerature dynamics in the control can avoid overdimensioning the hardware or downsizing the task.
+- HQP effectively guarantees thermal safety.
+- Other approaches (e.g., CBFs) can further enhance performance in certain scenarios.
+
+:::
+
+::: {.column}
+![](img/fire_3.webp){fig-align="center" style="border-radius: 12px;"}
+:::
+::::
+
+::: {.footer}
+Davide De Benedittis, Franco Angelini, Riccardo Incerpi, Lucia Pallottino, Manolo Garabini - Keep It Cool [@debenedittis2025keep]
+:::
+
+# Conclusion 🏁
+
+## Conclusion
+
+- HQP allows to solve a set of tasks while enforcing a priority order
+- It has been successfully applied to:
+  - Legged locomotion on compliant terrains [@debenedittis2025soft]
+  - Thermal safety in robots [@debenedittis2025keep]
+- Other potential application:
+  - Multi-robot control [@debenedittis2025managing]
+- Future works:
+  - Non-uniform time sampling [@gori2025optimal]
+
+## Future Works – Multi-Robot Control {.smaller}
+
+- Multi-robot setting
+- HQP to manage multiple concurrent and potentially conflicting tasks
+
+:::: {.columns}
+::: {.column}
+Heterogeneous coverage and battery recharging
+
+![](vid/managing/cov_4u2o.mp4){fig-align="center"}
+:::
+
+::: {.column}
+Obstacle avoidance > centroid velocity reference > formation control
+
+![](vid/managing/obs_comvel_form.mp4){fig-align="center"}
+:::
+::::
+
+::: {.footer}
+Davide De Benedittis, Manolo Garabini, Lucia Pallottino - Managing Conflicting Tasks with Hierarchical Optimization [@debenedittis2025managing]
+:::
+
+## Future Works – Non-Uniform Time Sampling
+
+::: {.fragment .semi-fade-out fragment-index="1"}
+**Why**: Constrained LQR (as most optimal control problems) assumes a uniform time sampling.
+:::
+
+::: {.fragment .fade-in-then-semi-out fragment-index="1"}
+**Core Idea**: Embed the sampling durations into the optimization problem. Derive closed-form cost function and gradients that can be precomputed.
+:::
+
+::: {.fragment .fade-in-then-semi-out fragment-index="2"}
+**How**: Use matrix exponentials to propagate the dynamics exactly.
+:::
+
+::: {.fragment .fade-in-then-semi-out fragment-index="3"}
+**Key Results**: Provide both Single Shooting and Multiple Shooting formulations with analytical gradients.
+:::
+
+::: {.fragment .fade-in-then-semi-out fragment-index="4"}
+**Take-Away**: Let the optimizer decide how to sample the horizon.
+:::
+
+::: {.footer}
+P. Gori, D. De Benedittis, M. Pierallini, F. Angelini, G. Pannocchia, M. Garabini - Optimal Non-Uniform Time Sampling [@gori2025optimal]
+:::
+
+# References 📚 {visibility="uncounted"}
+
+::: {#refs}
+:::
+
+# Grazie Per L'Attenzione (◕‿◕) {visibility="uncounted"}
+
+Contact me at:
+
+- davide.debenedittis@phd.unipi.it

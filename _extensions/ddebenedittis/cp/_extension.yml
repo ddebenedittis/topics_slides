@@ -1,0 +1,9 @@
+title: cp
+author: Davide De Benedittis
+version: 0.0.1
+contributes:
+  formats:
+    revealjs:
+      theme: [default, cp.scss]
+      slide-number: true
+      date-format: long
